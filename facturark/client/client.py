@@ -8,7 +8,6 @@ from .username import UsernameToken
 from .transports import SoapTransport
 from .utils import (
     make_zip_file_bytes, make_document_name)
-from .date_plugin import DatePlugin
 
 
 class Client:
@@ -19,7 +18,7 @@ class Client:
             wsdl_url,
             wsse=UsernameToken(username, password),
             transport=SoapTransport(),
-            plugins=[DatePlugin()])
+            plugins=[])
 
     def send(self, document):
         document = fromstring(document)
@@ -53,9 +52,10 @@ class Client:
         software_identifier = self.analyzer.get_software_identifier(document)
         uuid = self.analyzer.get_uuid(document)
 
-        response = self.client.service.ConsultaResultadoValidacionDocumentos(
-            document_type, document_number, vat, creation_date,
-            software_identifier, uuid)
+        with self.client.settings(strict=False):
+            response = self.client.service.ConsultaResultadoValidacionDocumentos(
+                document_type, document_number, vat, creation_date,
+                software_identifier, uuid)
 
         return zeep.helpers.serialize_object(response)
 
