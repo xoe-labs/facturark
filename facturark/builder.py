@@ -1,10 +1,9 @@
+# Thirdparty:
 from lxml.etree import tostring
 
 
 class DocumentBuilder:
-
-    def __init__(self, composer, identifier, validator,
-                 signer=None, verifier=None):
+    def __init__(self, composer, identifier, validator, signer=None, verifier=None):
         self.composer = composer
         self.identifier = identifier
         self.validator = validator
@@ -19,6 +18,6 @@ class DocumentBuilder:
             document = self.signer.sign(document)
             self.verifier.verify(document)
         serialized_document = tostring(
-            document, encoding='UTF-8', xml_declaration=True,
-            standalone=False).replace(b'\n', b'')
+            document, encoding="UTF-8", xml_declaration=True, standalone=False
+        ).replace(b"\n", b"")
         return serialized_document, uuid

@@ -1,5 +1,6 @@
-from lxml.etree import fromstring
+# Thirdparty:
 from facturark.client.transports import SoapTransport
+from lxml.etree import fromstring
 
 
 def test_soap_transport_instantiation():
@@ -12,7 +13,7 @@ def test_soap_transport_post_xml():
 
     class MockResponse:
         def __init__(self):
-            self.headers = {'Content-Type': 'Multipart/Related'}
+            self.headers = {"Content-Type": "Multipart/Related"}
 
     def mock_post(address, message, headers):
         return MockResponse()
@@ -24,4 +25,4 @@ def test_soap_transport_post_xml():
 
     response = transport.post_xml(address, envelope, headers)
 
-    assert 'multipart/related' in response.headers['Content-Type']
+    assert "multipart/related" in response.headers["Content-Type"]

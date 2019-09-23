@@ -1,3 +1,4 @@
+# Localfolder:
 from .v01_invoice_types import INVOICE_TYPES
 from .v02_identity_document_types import IDENTITY_DOCUMENT_TYPES
 from .v03_credit_note_concepts import CREDIT_NOTE_CONCEPTS

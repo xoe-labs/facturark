@@ -1,24 +1,40 @@
-from ..signer import Signer
+# Localfolder:
+from ..signer import (
+    Canonicalizer,
+    Encoder,
+    Encrypter,
+    Hasher,
+    Identifier,
+    Signer,
+    Verifier,
+)
 from ..signer.composers import (
-    SignatureComposer, SignatureValueComposer,
-    SignedInfoComposer, ReferenceComposer, KeyInfoComposer, ObjectComposer)
+    KeyInfoComposer,
+    ObjectComposer,
+    ReferenceComposer,
+    SignatureComposer,
+    SignatureValueComposer,
+    SignedInfoComposer,
+)
 from ..signer.composers.xades import (
-    QualifyingPropertiesComposer, SignedPropertiesComposer,
-    SigningCertificateComposer, SignaturePolicyIdentifierComposer,
-    SignerRoleComposer, SignedSignaturePropertiesComposer)
-from ..signer import (Canonicalizer, Hasher, Encoder, Identifier,
-                      Encrypter, Verifier)
+    QualifyingPropertiesComposer,
+    SignaturePolicyIdentifierComposer,
+    SignedPropertiesComposer,
+    SignedSignaturePropertiesComposer,
+    SignerRoleComposer,
+    SigningCertificateComposer,
+)
 
 
 def resolve_signed_properties_composer():
     signing_certificate_composer = SigningCertificateComposer()
-    signature_policy_identifier_composer = (
-        SignaturePolicyIdentifierComposer())
+    signature_policy_identifier_composer = SignaturePolicyIdentifierComposer()
     signer_role_composer = SignerRoleComposer()
     signed_signature_properties_composer = SignedSignaturePropertiesComposer(
         signing_certificate_composer,
         signature_policy_identifier_composer,
-        signer_role_composer)
+        signer_role_composer,
+    )
     return SignedPropertiesComposer(signed_signature_properties_composer)
 
 
@@ -54,11 +70,21 @@ def resolve_signer(certificate, private_key):
     signed_info_composer = resolve_signed_info_composer()
     signature_value_composer = SignatureValueComposer()
     signer = Signer(
-        canonicalizer, hasher, encoder, identifier, encrypter,
-        signature_composer, key_info_composer, object_composer,
-        qualifying_properties_composer, signed_properties_composer,
-        signed_info_composer, signature_value_composer,
-        certificate=certificate, private_key=private_key)
+        canonicalizer,
+        hasher,
+        encoder,
+        identifier,
+        encrypter,
+        signature_composer,
+        key_info_composer,
+        object_composer,
+        qualifying_properties_composer,
+        signed_properties_composer,
+        signed_info_composer,
+        signature_value_composer,
+        certificate=certificate,
+        private_key=private_key,
+    )
     return signer
 
 

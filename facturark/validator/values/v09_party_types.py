@@ -3,7 +3,7 @@
 # 8.9. Tipos de Organización Jurídica; Tipos de Adquiriente;
 
 PARTY_TYPES = {
-    "1": u"Persona jurídica",
-    "2": u"Persona natural",
-    "3": u"Gran contribuyente"
+    "1": "Persona jurídica",
+    "2": "Persona natural",
+    "3": "Gran contribuyente",
 }

@@ -1,8 +1,9 @@
-from pytest import fixture
-from lxml.etree import QName
+# Thirdparty:
+from facturark.composers import TaxSubtotalComposer, TaxTotalComposer
 from facturark.namespaces import NS
-from facturark.composers import TaxTotalComposer, TaxSubtotalComposer
 from facturark.resolver import resolve_tax_total_composer
+from lxml.etree import QName
+from pytest import fixture
 
 
 @fixture
@@ -13,27 +14,17 @@ def composer():
 @fixture
 def data_dict():
     return {
-        'tax_amount': {
-            '@attributes': {'currencyID': 'COP'},
-            '#text': "8934000.00"
+        "tax_amount": {"@attributes": {"currencyID": "COP"}, "#text": "8934000.00"},
+        "tax_evidence_indicator": "false",
+        "tax_subtotal": {
+            "percent": "19.00",
+            "taxable_amount": {
+                "@attributes": {"currencyID": "COP"},
+                "#text": "11345892.00",
+            },
+            "tax_amount": {"@attributes": {"currencyID": "COP"}, "#text": "2155719.48"},
+            "tax_category": {"tax_scheme": {"id": "03"}},
         },
-        'tax_evidence_indicator': 'false',
-        'tax_subtotal': {
-            'percent': "19.00",
-            'taxable_amount': {
-                '@attributes': {'currencyID': 'COP'},
-                '#text': "11345892.00"
-            },
-            'tax_amount': {
-                '@attributes': {'currencyID': 'COP'},
-                '#text': "2155719.48"
-            },
-            'tax_category': {
-                'tax_scheme': {
-                    'id': '03'
-                }
-            }
-        }
     }
 
 
@@ -42,11 +33,10 @@ def test_compose(composer, data_dict, schema):
 
     assert tax_total.tag == QName(NS.fe, "TaxTotal").text
 
-    tax_amount = tax_total.find(
-        QName(NS.cbc, "TaxAmount"))
+    tax_amount = tax_total.find(QName(NS.cbc, "TaxAmount"))
     assert tax_amount.text == "8934000.00"
-    assert tax_amount.attrib['currencyID'] == 'COP'
+    assert tax_amount.attrib["currencyID"] == "COP"
 
-    assert tax_total.findtext(QName(NS.cbc, 'TaxEvidenceIndicator')) == 'false'
+    assert tax_total.findtext(QName(NS.cbc, "TaxEvidenceIndicator")) == "false"
 
     schema.assertValid(tax_total)

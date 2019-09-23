@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
-from pytest import fixture
-from lxml.etree import QName, fromstring, tostring
+# Thirdparty:
 from facturark.namespaces import NS
 from facturark.signer.composers import ReferenceComposer
+from lxml.etree import QName, fromstring, tostring
+from pytest import fixture
 
 
 @fixture
@@ -16,17 +17,16 @@ def data_dict():
         "transforms": [
             {
                 "@attributes": {
-                    "Algorithm": ("http://www.w3.org/2000/09/"
-                                  "xmldsig#enveloped-signature")
-                },
+                    "Algorithm": (
+                        "http://www.w3.org/2000/09/" "xmldsig#enveloped-signature"
+                    )
+                }
             }
         ],
         "digest_method": {
-            "@attributes": {
-                "Algorithm": "http://www.w3.org/2000/09/xmldsig#sha1"
-            }
+            "@attributes": {"Algorithm": "http://www.w3.org/2000/09/xmldsig#sha1"}
         },
-        "digest_value": "6F5KPfMMBWPbl8ImvaG9z9NFSLE="
+        "digest_value": "6F5KPfMMBWPbl8ImvaG9z9NFSLE=",
     }
 
 

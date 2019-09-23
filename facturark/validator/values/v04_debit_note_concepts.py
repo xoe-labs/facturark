@@ -3,7 +3,7 @@
 # 8.1 Concepto de Notas débito
 
 DEBIT_NOTE_CONCEPTS = {
-    "1": u"Intereses",
-    "2": u"Gastos por cobrar",
-    "3": u"Cambio del valor"
+    "1": "Intereses",
+    "2": "Gastos por cobrar",
+    "3": "Cambio del valor",
 }

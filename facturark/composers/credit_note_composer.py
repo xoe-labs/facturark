@@ -1,16 +1,24 @@
 # -*- coding: utf-8 -*-
-from lxml.etree import Element, SubElement, QName, tostring
-from ..utils import make_child
+# Thirdparty:
+from lxml.etree import Element, QName, SubElement, tostring
+
+# Localfolder:
 from ..namespaces import NS
+from ..utils import make_child
 from .composer import Composer
 
 
 class CreditNoteComposer(Composer):
-
-    def __init__(self, extension_composer, supplier_party_composer,
-                 customer_party_composer, payment_composer,
-                 tax_total_composer, monetary_total_composer,
-                 credit_note_line_composer):
+    def __init__(
+        self,
+        extension_composer,
+        supplier_party_composer,
+        customer_party_composer,
+        payment_composer,
+        tax_total_composer,
+        monetary_total_composer,
+        credit_note_line_composer,
+    ):
         self.extension_composer = extension_composer
         self.supplier_party_composer = supplier_party_composer
         self.customer_party_composer = customer_party_composer
@@ -23,46 +31,60 @@ class CreditNoteComposer(Composer):
         root_name = root_name or self.root_name
         root = Element(QName(NS.fe, root_name), nsmap=vars(NS))
 
-        extensions_list = data_dict['extensions']
-        extensions = make_child(
-            root, QName(NS.ext, "UBLExtensions"), empty=True)
+        extensions_list = data_dict["extensions"]
+        extensions = make_child(root, QName(NS.ext, "UBLExtensions"), empty=True)
         for extension_dict in extensions_list:
-            extensions.append(self.extension_composer.compose(
-                extension_dict, "UBLExtension"))
+            extensions.append(
+                self.extension_composer.compose(extension_dict, "UBLExtension")
+            )
 
         make_child(root, QName(NS.cbc, "UBLVersionID"), "UBL 2.0")
 
         make_child(root, QName(NS.cbc, "ProfileID"), "DIAN 1.0")
 
-        make_child(root, QName(NS.cbc, "ID"), data_dict['id'])
+        make_child(root, QName(NS.cbc, "ID"), data_dict["id"])
 
-        if data_dict.get('uuid'):
-            make_child(root, QName(NS.cbc, "UUID"), data_dict['uuid'])
+        if data_dict.get("uuid"):
+            make_child(root, QName(NS.cbc, "UUID"), data_dict["uuid"])
 
-        make_child(root, QName(NS.cbc, "IssueDate"), data_dict['issue_date'])
+        make_child(root, QName(NS.cbc, "IssueDate"), data_dict["issue_date"])
 
-        make_child(root, QName(NS.cbc, "IssueTime"), data_dict['issue_time'])
+        make_child(root, QName(NS.cbc, "IssueTime"), data_dict["issue_time"])
 
-        make_child(root, QName(NS.cbc, "DocumentCurrencyCode"),
-                   data_dict['document_currency_code'])
+        make_child(
+            root,
+            QName(NS.cbc, "DocumentCurrencyCode"),
+            data_dict["document_currency_code"],
+        )
 
-        root.append(self.supplier_party_composer.compose(
-            data_dict['accounting_supplier_party'], 'AccountingSupplierParty'))
+        root.append(
+            self.supplier_party_composer.compose(
+                data_dict["accounting_supplier_party"], "AccountingSupplierParty"
+            )
+        )
 
-        root.append(self.customer_party_composer.compose(
-            data_dict['accounting_customer_party'], 'AccountingCustomerParty'))
+        root.append(
+            self.customer_party_composer.compose(
+                data_dict["accounting_customer_party"], "AccountingCustomerParty"
+            )
+        )
 
-        tax_totals = data_dict.get('tax_totals', [])
+        tax_totals = data_dict.get("tax_totals", [])
         for tax_total in tax_totals:
-            root.append(self.tax_total_composer.compose(
-                tax_total, 'TaxTotal'))
+            root.append(self.tax_total_composer.compose(tax_total, "TaxTotal"))
 
-        root.append(self.monetary_total_composer.compose(
-            data_dict['legal_monetary_total'], 'LegalMonetaryTotal'))
+        root.append(
+            self.monetary_total_composer.compose(
+                data_dict["legal_monetary_total"], "LegalMonetaryTotal"
+            )
+        )
 
-        credit_note_lines_list = data_dict['credit_note_lines']
+        credit_note_lines_list = data_dict["credit_note_lines"]
         for credit_note_line_dict in credit_note_lines_list:
-            root.append(self.credit_note_line_composer.compose(
-                credit_note_line_dict, 'CreditNoteLine'))
+            root.append(
+                self.credit_note_line_composer.compose(
+                    credit_note_line_dict, "CreditNoteLine"
+                )
+            )
 
         return root

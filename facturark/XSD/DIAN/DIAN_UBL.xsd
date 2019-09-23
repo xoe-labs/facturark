@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns="http://www.w3.org/2001/XMLSchema" 
-    xmlns:tns="http://www.dian.gov.co/contratos/facturaelectronica/v1" 
-    xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" 
-    xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" 
-    xmlns:ext="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2" 
-    xmlns:sts="http://www.dian.gov.co/contratos/facturaelectronica/v1/Structures" 
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+    xmlns:tns="http://www.dian.gov.co/contratos/facturaelectronica/v1"
+    xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+    xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+    xmlns:ext="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2"
+    xmlns:sts="http://www.dian.gov.co/contratos/facturaelectronica/v1/Structures"
     xmlns:xml="http://www.w3.org/XML/1998/namespace" targetNamespace="http://www.dian.gov.co/contratos/facturaelectronica/v1" elementFormDefault="qualified">
     <import namespace="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" schemaLocation="UBL2/common/UBL-CommonAggregateComponents-2.0.xsd"/>
     <import namespace="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" schemaLocation="UBL2/common/UBL-CommonBasicComponents-2.0.xsd"/>
@@ -46,8 +46,8 @@
             <element ref="cbc:ID" minOccurs="1" maxOccurs="1">
                 <annotation>
                     <documentation xml:lang="es">
-						1.1 Número de documento: Número de factura o factura cambiaria. 
-						Incluye prefijo + consecutivo de factura. 
+						1.1 Número de documento: Número de factura o factura cambiaria.
+						Incluye prefijo + consecutivo de factura.
 						No se permiten caracteres adicionales como espacios o guiones.
                     </documentation>
                 </annotation>
@@ -876,7 +876,7 @@
 •	jurídica
 •	gran contribuyente
 •	otros
-						
+
                     </documentation>
                     <documentation>2017-ago-10: los valores válidos son "1" y "2" para el concepto de "tipo de organización jurídica" que utiliza el Código de Comercio: "persona jurídica" y "persona natural o física"</documentation>
                 </annotation>

@@ -1,7 +1,8 @@
-from pytest import fixture
-from lxml.etree import QName
+# Thirdparty:
+from facturark.composers import AddressComposer, LocationComposer
 from facturark.namespaces import NS
-from facturark.composers import LocationComposer, AddressComposer
+from lxml.etree import QName
+from pytest import fixture
 
 
 @fixture
@@ -13,22 +14,20 @@ def composer():
 @fixture
 def data_dict():
     return {
-        'address': {
-            'department': u'Valle',
-            'city_name': u'Cali',
-            'country': {
-                'identification_code': 'CO'
-            }
+        "address": {
+            "department": "Valle",
+            "city_name": "Cali",
+            "country": {"identification_code": "CO"},
         }
     }
 
 
 def test_compose(composer, data_dict, schema):
-    location = composer.compose(data_dict, 'DeliveryLocation')
+    location = composer.compose(data_dict, "DeliveryLocation")
 
     assert location.tag == QName(NS.fe, "DeliveryLocation").text
-    address = location.find(QName(NS.fe, 'Address'))
-    assert address.findtext(QName(NS.cbc, 'Department')) == 'Valle'
-    assert address.findtext(QName(NS.cbc, 'CityName')) == 'Cali'
+    address = location.find(QName(NS.fe, "Address"))
+    assert address.findtext(QName(NS.cbc, "Department")) == "Valle"
+    assert address.findtext(QName(NS.cbc, "CityName")) == "Cali"
 
     schema.assertValid(location)

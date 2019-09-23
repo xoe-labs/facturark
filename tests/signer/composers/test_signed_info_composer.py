@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-from pytest import fixture
-from lxml.etree import QName, fromstring
+# Thirdparty:
 from facturark.namespaces import NS
-from facturark.signer.composers import (
-    SignedInfoComposer, ReferenceComposer)
+from facturark.signer.composers import ReferenceComposer, SignedInfoComposer
+from lxml.etree import QName, fromstring
+from pytest import fixture
 
 
 @fixture
@@ -17,34 +17,32 @@ def data_dict():
     return {
         "canonicalization_method": {
             "@attributes": {
-                "Algorithm": ("http://www.w3.org/TR/"
-                              "2001/REC-xml-c14n-20010315")
+                "Algorithm": ("http://www.w3.org/TR/" "2001/REC-xml-c14n-20010315")
             }
         },
         "signature_method": {
-            "@attributes": {
-                "Algorithm": "http://www.w3.org/2000/09/xmldsig#rsa-sha1"
-            }
+            "@attributes": {"Algorithm": "http://www.w3.org/2000/09/xmldsig#rsa-sha1"}
         },
         "references": [
             {
                 "transforms": [
                     {
                         "@attributes": {
-                            "Algorithm": ("http://www.w3.org/2000/09/"
-                                          "xmldsig#enveloped-signature")
-                        },
+                            "Algorithm": (
+                                "http://www.w3.org/2000/09/"
+                                "xmldsig#enveloped-signature"
+                            )
+                        }
                     }
                 ],
                 "digest_method": {
                     "@attributes": {
-                        "Algorithm": ("http://www.w3.org/2000/"
-                                      "09/xmldsig#sha1")
+                        "Algorithm": ("http://www.w3.org/2000/" "09/xmldsig#sha1")
                     }
                 },
-                "digest_value": "6F5KPfMMBWPbl8ImvaG9z9NFSLE="
+                "digest_value": "6F5KPfMMBWPbl8ImvaG9z9NFSLE=",
             }
-        ]
+        ],
     }
 
 

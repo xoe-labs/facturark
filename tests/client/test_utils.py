@@ -1,12 +1,14 @@
+# Stdlib:
 import io
 from zipfile import ZipFile
-from facturark.client.utils import (
-    make_zip_file_bytes, make_document_name)
+
+# Thirdparty:
+from facturark.client.utils import make_document_name, make_zip_file_bytes
 
 
 def test_make_zip_file_bytes():
-    file_name = 'face_f0098765432000000000b.xml'
-    document_bytes = b'<Invoice></Invoice>'
+    file_name = "face_f0098765432000000000b.xml"
+    document_bytes = b"<Invoice></Invoice>"
 
     zip_file = make_zip_file_bytes(file_name, document_bytes)
 

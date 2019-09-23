@@ -1,9 +1,13 @@
 # -*- coding: utf-8 -*-
-from pytest import fixture
-from lxml.etree import QName
-from facturark.namespaces import NS
+# Thirdparty:
 from facturark.composers import (
-    AmountComposer, CreditNoteLineComposer, BillingReferenceComposer)
+    AmountComposer,
+    BillingReferenceComposer,
+    CreditNoteLineComposer,
+)
+from facturark.namespaces import NS
+from lxml.etree import QName
+from pytest import fixture
 
 
 @fixture
@@ -15,105 +19,82 @@ def composer():
 
 @fixture
 def data_dict():
-    return{
+    return {
         "id": "113",
         "uuid": "abcd123",
-        "credited_quantity": {
-                "@attributes": {
-                    "unitCode": "P4"
-                },
-            "#text": "16985"
-        },
+        "credited_quantity": {"@attributes": {"unitCode": "P4"}, "#text": "16985"},
         "line_extension_amount": {
-            "@attributes": {
-                "currencyID": "COP"
-            },
-            "#text": "15031725.00"
+            "@attributes": {"currencyID": "COP"},
+            "#text": "15031725.00",
         },
-        "discrepancy_response": {
-            "response_code": "2"
-        },
-        "billing_references": [{
-            "invoice_document_reference": {
-                "id": "PRUE980000094",
-                "uuid": "3d5a434b014429b551864c49a84164d58b11ea02",
-                "issue_date": "2018-11-30"
-            },
-            "billing_reference_line": {
-                "amount": {
-                    "@attributes": {
-                        "currencyID": "COP"
-                    },
-                    "#text": "15031725.00"
-                }
-            },
-            "additional_document_reference": {
-                "id": "JD-11-2018",
-                "issue_date": "2018-11-30",
-                "document_type": u"Decisión de la JD",
-                "xpath": "",
-                "attachment": ""
-            }
-        }],
-        "tax_total": {
-            "tax_amount": {
-                "@attributes": {
-                    "currencyID": "COP"
+        "discrepancy_response": {"response_code": "2"},
+        "billing_references": [
+            {
+                "invoice_document_reference": {
+                    "id": "PRUE980000094",
+                    "uuid": "3d5a434b014429b551864c49a84164d58b11ea02",
+                    "issue_date": "2018-11-30",
                 },
-                "#text": "2856027.75"
+                "billing_reference_line": {
+                    "amount": {
+                        "@attributes": {"currencyID": "COP"},
+                        "#text": "15031725.00",
+                    }
+                },
+                "additional_document_reference": {
+                    "id": "JD-11-2018",
+                    "issue_date": "2018-11-30",
+                    "document_type": "Decisión de la JD",
+                    "xpath": "",
+                    "attachment": "",
+                },
             }
+        ],
+        "tax_total": {
+            "tax_amount": {"@attributes": {"currencyID": "COP"}, "#text": "2856027.75"}
         },
         "item": {
             "description": "[CARD] Graphics Card",
             "additional_information": (
-                u"El sistema de la DIAN señaló que la firma digital "
-                u"está fallida")
-        }
+                "El sistema de la DIAN señaló que la firma digital " "está fallida"
+            ),
+        },
     }
 
 
 @fixture
 def data_dict_without_taxes_items():
-    return{
+    return {
         "id": "113",
         "uuid": "abcd123",
-        "credited_quantity": {
-                "@attributes": {
-                    "unitCode": "P4"
-                },
-            "#text": "16985"
-        },
+        "credited_quantity": {"@attributes": {"unitCode": "P4"}, "#text": "16985"},
         "line_extension_amount": {
-            "@attributes": {
-                "currencyID": "COP"
-            },
-            "#text": "15031725.00"
+            "@attributes": {"currencyID": "COP"},
+            "#text": "15031725.00",
         },
-        "discrepancy_response": {
-            "response_code": "2"
-        },
-        "billing_references": [{
-            "invoice_document_reference": {
-                "id": "PRUE980000094",
-                "uuid": "3d5a434b014429b551864c49a84164d58b11ea02",
-                "issue_date": "2018-11-30"
-            },
-            "billing_reference_line": {
-                "amount": {
-                    "@attributes": {
-                        "currencyID": "COP"
-                    },
-                    "#text": "15031725.00"
-                }
-            },
-            "additional_document_reference": {
-                "id": "JD-11-2018",
-                "issue_date": "2018-11-30",
-                "document_type": "Decision de la JD",
-                "xpath": "",
-                "attachment": ""
+        "discrepancy_response": {"response_code": "2"},
+        "billing_references": [
+            {
+                "invoice_document_reference": {
+                    "id": "PRUE980000094",
+                    "uuid": "3d5a434b014429b551864c49a84164d58b11ea02",
+                    "issue_date": "2018-11-30",
+                },
+                "billing_reference_line": {
+                    "amount": {
+                        "@attributes": {"currencyID": "COP"},
+                        "#text": "15031725.00",
+                    }
+                },
+                "additional_document_reference": {
+                    "id": "JD-11-2018",
+                    "issue_date": "2018-11-30",
+                    "document_type": "Decision de la JD",
+                    "xpath": "",
+                    "attachment": "",
+                },
             }
-        }]
+        ],
     }
 
 
@@ -121,39 +102,32 @@ def test_compose(composer, data_dict, schema):
     credit_note_line = composer.compose(data_dict)
 
     assert credit_note_line.tag == QName(NS.cac, "CreditNoteLine").text
-    assert credit_note_line.findtext(QName(NS.cbc, 'ID')) == '113'
-    assert credit_note_line.findtext(QName(NS.cbc, 'UUID')) == 'abcd123'
+    assert credit_note_line.findtext(QName(NS.cbc, "ID")) == "113"
+    assert credit_note_line.findtext(QName(NS.cbc, "UUID")) == "abcd123"
 
-    line_extension_amount = credit_note_line.find(
-        QName(NS.cbc, "LineExtensionAmount"))
+    line_extension_amount = credit_note_line.find(QName(NS.cbc, "LineExtensionAmount"))
     assert line_extension_amount.text == "15031725.00"
-    assert line_extension_amount.attrib['currencyID'] == 'COP'
+    assert line_extension_amount.attrib["currencyID"] == "COP"
 
-    discrepancy_response = credit_note_line.find(
-        QName(NS.cac, "DiscrepancyResponse"))
-    response_code = discrepancy_response.find(
-        QName(NS.cbc, "ResponseCode"))
+    discrepancy_response = credit_note_line.find(QName(NS.cac, "DiscrepancyResponse"))
+    response_code = discrepancy_response.find(QName(NS.cbc, "ResponseCode"))
     assert response_code.text == "2"
 
-    assert credit_note_line.find(
-        QName(NS.cac, "BillingReference")) is not None
+    assert credit_note_line.find(QName(NS.cac, "BillingReference")) is not None
 
     tax_total = credit_note_line.find(QName(NS.cac, "TaxTotal"))
     assert tax_total.find(QName(NS.cbc, "TaxAmount")).text == "2856027.75"
-    assert tax_total.find(QName(NS.cbc, "TaxAmount")
-                          ).attrib.get('currencyID') == "COP"
+    assert tax_total.find(QName(NS.cbc, "TaxAmount")).attrib.get("currencyID") == "COP"
 
     item = credit_note_line.find(QName(NS.cac, "Item"))
-    assert item.find(QName(NS.cbc, "Description")).text == (
-        "[CARD] Graphics Card")
+    assert item.find(QName(NS.cbc, "Description")).text == ("[CARD] Graphics Card")
     assert item.find(QName(NS.cbc, "AdditionalInformation")).text == (
-        u"El sistema de la DIAN señaló que la firma digital "
-        u"está fallida")
+        "El sistema de la DIAN señaló que la firma digital " "está fallida"
+    )
 
     schema.assertValid(credit_note_line)
 
 
-def test_compose_without_taxes_items(composer, data_dict_without_taxes_items,
-                                     schema):
+def test_compose_without_taxes_items(composer, data_dict_without_taxes_items, schema):
     credit_note_line = composer.compose(data_dict_without_taxes_items)
     schema.assertValid(credit_note_line)

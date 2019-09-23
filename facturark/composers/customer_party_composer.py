@@ -1,11 +1,13 @@
+# Thirdparty:
 from lxml.etree import Element, QName
-from ..utils import make_child
+
+# Localfolder:
 from ..namespaces import NS
+from ..utils import make_child
 from .composer import Composer
 
 
 class CustomerPartyComposer(Composer):
-
     def __init__(self, party_composer):
         self.party_composer = party_composer
 
@@ -13,11 +15,12 @@ class CustomerPartyComposer(Composer):
         root_name = root_name or self.root_name
         root = Element(QName(NS.fe, root_name), nsmap=vars(NS))
 
-        make_child(root, QName(NS.cbc, 'AdditionalAccountID'),
-                   str(int(data_dict['additional_account_id'])))
+        make_child(
+            root,
+            QName(NS.cbc, "AdditionalAccountID"),
+            str(int(data_dict["additional_account_id"])),
+        )
 
-        root.append(
-            self.party_composer.compose(
-                data_dict['party']))
+        root.append(self.party_composer.compose(data_dict["party"]))
 
         return root

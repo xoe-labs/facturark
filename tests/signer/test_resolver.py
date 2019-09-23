@@ -1,9 +1,12 @@
+# Thirdparty:
 from facturark.signer import Signer, Verifier
-from facturark.signer.composers import (
-    SignatureComposer, SignedInfoComposer)
+from facturark.signer.composers import SignatureComposer, SignedInfoComposer
 from facturark.signer.resolver import (
-    resolve_signature_composer, resolve_signed_info_composer,
-    resolve_signer, resolve_verifier)
+    resolve_signature_composer,
+    resolve_signed_info_composer,
+    resolve_signer,
+    resolve_verifier,
+)
 
 
 def test_resolve_signature_composer():

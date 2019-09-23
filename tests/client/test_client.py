@@ -1,6 +1,7 @@
+# Thirdparty:
+from facturark.client import Client
 from lxml.etree import fromstring
 from pytest import fixture
-from facturark.client import Client
 
 
 def test_client_instantiation(client):
@@ -9,7 +10,7 @@ def test_client_instantiation(client):
 
 def test_client_send(client, request_dict):
     def mock_service(vat, invoice_number, issue_date, document):
-        return {'response': 'success'}
+        return {"response": "success"}
 
     client.client.service.EnvioFacturaElectronica = mock_service
     response = client.send(**request_dict)
@@ -17,9 +18,10 @@ def test_client_send(client, request_dict):
 
 
 def test_client_query(client, query_dict):
-    def mock_service(document_type, document_number, vat, creation_date,
-                     software_identifier, uuid):
-        return {'response': 'success'}
+    def mock_service(
+        document_type, document_number, vat, creation_date, software_identifier, uuid
+    ):
+        return {"response": "success"}
 
     client.client.service.ConsultaResultadoValidacionDocumentos = mock_service
     response = client.query(**query_dict)
@@ -29,7 +31,7 @@ def test_client_query(client, query_dict):
 def test_client_compose(client, request_dict):
     request = client.compose(**request_dict)
     assert request is not None
-    assert 'Envelope' in request.tag
+    assert "Envelope" in request.tag
 
 
 def test_invoice_serialize(client, request_dict):

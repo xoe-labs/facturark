@@ -1,13 +1,17 @@
+# Thirdparty:
 import facturark
 
 
 def test_api_build_invoice(invoice_dict, monkeypatch):
     with monkeypatch.context() as m:
+
         def mock_resolve_validator():
             class MockValidator:
                 def validate(self, invoice):
                     return invoice
+
             return MockValidator()
+
         m.setattr(facturark.api, "resolve_validator", mock_resolve_validator)
 
         def mock_resolve_identifier(kind, technical_key=None):
@@ -16,8 +20,9 @@ def test_api_build_invoice(invoice_dict, monkeypatch):
                     self.technical_key = technical_key
 
                 def identify(self, invoice):
-                    return ''
-            return MockInvoiceIdentifier('ABC123')
+                    return ""
+
+            return MockInvoiceIdentifier("ABC123")
 
         m.setattr(facturark.api, "resolve_identifier", mock_resolve_identifier)
 
@@ -27,27 +32,33 @@ def test_api_build_invoice(invoice_dict, monkeypatch):
 
 def test_api_build_credit_note(credit_note_dict, monkeypatch):
     with monkeypatch.context() as m:
+
         def mock_resolve_validator():
             class MockValidator:
                 def validate(self, invoice):
                     return invoice
+
             return MockValidator()
+
         m.setattr(facturark.api, "resolve_validator", mock_resolve_validator)
 
-        result = facturark.build_document(credit_note_dict, kind='credit_note')
+        result = facturark.build_document(credit_note_dict, kind="credit_note")
         assert result is not None
 
 
 def test_api_build_debit_note(debit_note_dict, monkeypatch):
     with monkeypatch.context() as m:
+
         def mock_resolve_validator():
             class MockValidator:
                 def validate(self, invoice):
                     return invoice
+
             return MockValidator()
+
         m.setattr(facturark.api, "resolve_validator", mock_resolve_validator)
 
-        result = facturark.build_document(debit_note_dict, kind='debit_note')
+        result = facturark.build_document(debit_note_dict, kind="debit_note")
         assert result is not None
 
 
@@ -69,9 +80,10 @@ def test_api_send(monkeypatch):
         "vat": "900XXXYYY",
         "invoice_number": "900000001",
         "issue_date": "2018-09-14T16:11:31",
-        "document": "<Invoice></Invoice>"
+        "document": "<Invoice></Invoice>",
     }
     with monkeypatch.context() as m:
+
         def mock_send(*args, **kwargs):
             return "<Response></Response>"
 
@@ -90,10 +102,11 @@ def test_api_query(monkeypatch):
         "vat": "800191678",
         "creation_date": "2017-11-16T08:18:35",
         "software_identifier": "98fcc80b-9f61-4fe2-aac3-13570df4a9e3",
-        "uuid": "98fcc80b-9f61-4fe2-aac3-13570df4a9e3"
+        "uuid": "98fcc80b-9f61-4fe2-aac3-13570df4a9e3",
     }
 
     with monkeypatch.context() as m:
+
         def mock_query(*args, **kwargs):
             return "<Response></Response>"
 

@@ -1,28 +1,40 @@
-from .values import (INVOICE_TYPES, IDENTITY_DOCUMENT_TYPES, PARTY_TYPES,
-                     COUNTRIES, CURRENCIES, TAX_LEVELS, TAX_TYPES,
-                     REPRESENTATION_TYPES, LIABILITY_TYPES, CUSTOMS_USERS_TYPES,
-                     ESTABLISHMENT_TYPES)
+# Localfolder:
+from .values import (
+    COUNTRIES,
+    CURRENCIES,
+    CUSTOMS_USERS_TYPES,
+    ESTABLISHMENT_TYPES,
+    IDENTITY_DOCUMENT_TYPES,
+    INVOICE_TYPES,
+    LIABILITY_TYPES,
+    PARTY_TYPES,
+    REPRESENTATION_TYPES,
+    TAX_LEVELS,
+    TAX_TYPES,
+)
 
 TAX_SCHEME_VALUES = (
-    list(TAX_LEVELS) + list(REPRESENTATION_TYPES) + list(LIABILITY_TYPES)
-     + list(CUSTOMS_USERS_TYPES) + list(ESTABLISHMENT_TYPES))
+    list(TAX_LEVELS)
+    + list(REPRESENTATION_TYPES)
+    + list(LIABILITY_TYPES)
+    + list(CUSTOMS_USERS_TYPES)
+    + list(ESTABLISHMENT_TYPES)
+)
 
 
 class Reviewer:
-
     def __init__(self, analyzer):
         self.analyzer = analyzer
 
     @staticmethod
-    def check(valid_values, value, message=''):
-        message = message or 'Invalid Value: {}'.format(value)
+    def check(valid_values, value, message=""):
+        message = message or f"Invalid Value: {value}"
         if value not in valid_values:
             raise ValueError(message)
 
     @staticmethod
-    def check_lower(upper_limit, value, message=''):
-        message = message or (
-            'Value ({}) exceeds upper limit {}.'.format(value, upper_limit))
+    def check_lower(upper_limit, value, message=""):
+        message = message or (f"Value ({value}) exceeds upper limit {upper_limit}.")
         if value > upper_limit:
             raise ValueError(message)
 
@@ -102,7 +114,7 @@ class Reviewer:
         values = self.analyzer.get_tax_total_amounts(element)
         for value in values:
             value = value if "." in value else value + ".0"
-            integers, decimals = value.split('.')
+            integers, decimals = value.split(".")
             self.check_lower(14, len(integers))
             self.check_lower(4, len(decimals))
 
@@ -115,7 +127,7 @@ class Reviewer:
         values = self.analyzer.get_taxable_amount(element)
         for value in values:
             value = value if "." in value else value + ".0"
-            integers, decimals = value.split('.')
+            integers, decimals = value.split(".")
             self.check_lower(14, len(integers))
             self.check_lower(4, len(decimals))
 
@@ -123,7 +135,7 @@ class Reviewer:
         values = self.analyzer.get_tax_amount(element)
         for value in values:
             value = value if "." in value else value + ".0"
-            integers, decimals = value.split('.')
+            integers, decimals = value.split(".")
             self.check_lower(14, len(integers))
             self.check_lower(4, len(decimals))
 

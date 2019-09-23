@@ -1,4 +1,5 @@
-from base64 import b64encode, b64decode
+# Stdlib:
+from base64 import b64decode, b64encode
 
 
 class Encoder:

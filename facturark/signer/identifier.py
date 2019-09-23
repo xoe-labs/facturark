@@ -1,8 +1,8 @@
+# Stdlib:
 from uuid import uuid4
 
 
 class Identifier:
-
     def generate_id(self, uuid="", suffix="", prefix="xmldsig"):
         tokens_list = []
         if prefix:

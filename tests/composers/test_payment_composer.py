@@ -1,7 +1,8 @@
-from pytest import fixture
-from lxml.etree import QName
-from facturark.namespaces import NS
+# Thirdparty:
 from facturark.composers import AmountComposer, PaymentComposer
+from facturark.namespaces import NS
+from lxml.etree import QName
+from pytest import fixture
 
 
 @fixture
@@ -12,22 +13,18 @@ def composer():
 @fixture
 def data_dict():
     return {
-        'paid_amount': {
-            '@attributes': {'currencyID': 'COP'},
-            '#text': "4567.00"
-        },
-        'paid_date': '2018-09-20'
+        "paid_amount": {"@attributes": {"currencyID": "COP"}, "#text": "4567.00"},
+        "paid_date": "2018-09-20",
     }
 
 
 def test_compose(composer, data_dict, schema):
-    payment = composer.compose(data_dict, 'PrepaidPayment')
+    payment = composer.compose(data_dict, "PrepaidPayment")
 
     assert payment.tag == QName(NS.fe, "PrepaidPayment").text
 
-    paid_amount = payment.find(
-        QName(NS.cbc, "PaidAmount"))
+    paid_amount = payment.find(QName(NS.cbc, "PaidAmount"))
     assert paid_amount.text == "4567.00"
-    assert paid_amount.attrib['currencyID'] == 'COP'
+    assert paid_amount.attrib["currencyID"] == "COP"
 
     schema.assertValid(payment)

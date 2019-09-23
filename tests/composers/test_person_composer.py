@@ -1,7 +1,8 @@
-from pytest import fixture
-from lxml.etree import QName, fromstring
-from facturark.namespaces import NS
+# Thirdparty:
 from facturark.composers import PersonComposer
+from facturark.namespaces import NS
+from lxml.etree import QName, fromstring
+from pytest import fixture
 
 
 @fixture
@@ -11,10 +12,7 @@ def composer():
 
 @fixture
 def data_dict():
-    return {
-        'first_name': "Gabriel",
-        'family_name': "Echeverry"
-    }
+    return {"first_name": "Gabriel", "family_name": "Echeverry"}
 
 
 def test_compose(composer, data_dict, schema):

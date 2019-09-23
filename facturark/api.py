@@ -1,26 +1,35 @@
+# Localfolder:
 from .analyzer import Analyzer
 from .builder import DocumentBuilder
 from .client import Client
-from .resolver import (
-    resolve_invoice_composer, resolve_credit_note_composer,
-    resolve_debit_note_composer, resolve_composer, resolve_identifier)
-from .identifier import InvoiceIdentifier, BlankIdentifier
-from .validator import Validator
-from .signer.resolver import resolve_signer, resolve_verifier
-from .validator.resolver import resolve_validator
+from .identifier import BlankIdentifier, InvoiceIdentifier
 from .imager import Imager
+from .resolver import (
+    resolve_composer,
+    resolve_credit_note_composer,
+    resolve_debit_note_composer,
+    resolve_identifier,
+    resolve_invoice_composer,
+)
+from .signer.resolver import resolve_signer, resolve_verifier
+from .validator import Validator
+from .validator.resolver import resolve_validator
 
 
-def build_document(document_dict, certificate=None, private_key=None,
-                   technical_key=None, kind='invoice'):
+def build_document(
+    document_dict,
+    certificate=None,
+    private_key=None,
+    technical_key=None,
+    kind="invoice",
+):
     composer = resolve_composer(kind)
     identifier = resolve_identifier(kind, technical_key)
     validator = resolve_validator()
     signer = resolve_signer(certificate, private_key)
     verifier = resolve_verifier()
 
-    builder = DocumentBuilder(
-        composer, identifier, validator, signer, verifier)
+    builder = DocumentBuilder(composer, identifier, validator, signer, verifier)
     return builder.build(document_dict)
 
 
@@ -29,7 +38,8 @@ def send_document(request_dict):
         Analyzer(),
         request_dict.pop("username"),
         request_dict.pop("password"),
-        request_dict.pop("wsdl_url"))
+        request_dict.pop("wsdl_url"),
+    )
     return client.send(**request_dict)
 
 
@@ -48,6 +58,7 @@ def query_document(query_dict):
         Analyzer(),
         query_dict.pop("username"),
         query_dict.pop("password"),
-        query_dict.pop("wsdl_url"))
+        query_dict.pop("wsdl_url"),
+    )
     response = client.query(**query_dict)
     return response

@@ -1,7 +1,8 @@
-from pytest import fixture
-from lxml.etree import QName
-from facturark.namespaces import NS
+# Thirdparty:
 from facturark.composers import AmountComposer
+from facturark.namespaces import NS
+from lxml.etree import QName
+from pytest import fixture
 
 
 @fixture
@@ -11,17 +12,14 @@ def composer():
 
 @fixture
 def data_dict():
-    return {
-        '@attributes': {'currencyID': 'COP'},
-        '#text': "999999.00"
-    }
+    return {"@attributes": {"currencyID": "COP"}, "#text": "999999.00"}
 
 
 def test_compose(composer, data_dict, schema):
-    amount = composer.compose(data_dict, 'LineExtensionAmount')
+    amount = composer.compose(data_dict, "LineExtensionAmount")
 
     assert amount.tag == QName(NS.cbc, "LineExtensionAmount").text
     assert amount.text == "999999.00"
-    assert amount.attrib == data_dict['@attributes']
+    assert amount.attrib == data_dict["@attributes"]
 
     schema.assertValid(amount)

@@ -1,11 +1,13 @@
+# Thirdparty:
 from lxml.etree import Element, QName
-from ..utils import make_child
+
+# Localfolder:
 from ..namespaces import NS
+from ..utils import make_child
 from .composer import Composer
 
 
 class PaymentComposer(Composer):
-
     def __init__(self, amount_composer):
         self.amount_composer = amount_composer
 
@@ -13,9 +15,10 @@ class PaymentComposer(Composer):
         root_name = root_name or self.root_name
         root = Element(QName(NS.fe, root_name), nsmap=vars(NS))
 
-        root.append(self.amount_composer.compose(data_dict['paid_amount'],
-                                                 'PaidAmount'))
+        root.append(
+            self.amount_composer.compose(data_dict["paid_amount"], "PaidAmount")
+        )
 
-        make_child(root, QName(NS.cbc, 'PaidDate'), data_dict['paid_date'])
+        make_child(root, QName(NS.cbc, "PaidDate"), data_dict["paid_date"])
 
         return root

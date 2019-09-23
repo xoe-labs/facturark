@@ -1,5 +1,10 @@
+# Stdlib:
 from copy import deepcopy
-from lxml.etree import tostring, QName, fromstring
+
+# Thirdparty:
+from lxml.etree import QName, fromstring, tostring
+
+# Localfolder:
 from ..namespaces import NS
 from ..utils import read_asset
 
@@ -10,17 +15,16 @@ class Verifier:
         self.encoder = encoder
         self.hasher = hasher
         self.encrypter = encrypter
-        self.signature_path = './/ds:Signature'
+        self.signature_path = ".//ds:Signature"
 
     def verify(self, element):
         # Compare Resources Digests
         reference_dict_list = self._parse_references(element)
         for reference_dict in reference_dict_list:
             computed_digest = self._digest_resource(
-                element, reference_dict['uri'],
-                reference_dict['digest_method'])
-            self._compare_digests(
-                computed_digest, reference_dict['digest_value'])
+                element, reference_dict["uri"], reference_dict["digest_method"]
+            )
+            self._compare_digests(computed_digest, reference_dict["digest_value"])
 
         # Get X509 PEM Certificate
         certificate = self._extract_certificate(element)
@@ -39,7 +43,8 @@ class Verifier:
 
         # Verify Encrypted Signature
         self.encrypter.verify_signature(
-            certificate, signature_value, signed_info_digest, method)
+            certificate, signature_value, signed_info_digest, method
+        )
 
         return True
 
@@ -53,41 +58,42 @@ class Verifier:
         return signature
 
     def _get_canonical_signed_info(self, element):
-        path = self.signature_path + '/ds:SignedInfo'
+        path = self.signature_path + "/ds:SignedInfo"
         signed_info = element.find(path, namespaces=vars(NS))
         canonical_signed_info = self.canonicalizer.canonicalize(signed_info)
         return fromstring(canonical_signed_info)
 
     def _get_signature_method(self, element):
-        path = self.signature_path + '/ds:SignedInfo/ds:SignatureMethod'
+        path = self.signature_path + "/ds:SignedInfo/ds:SignatureMethod"
         signature_method = element.find(path, namespaces=vars(NS))
-        algorithm = signature_method.attrib.get('Algorithm')
+        algorithm = signature_method.attrib.get("Algorithm")
         return algorithm
 
     def _get_canonicalization_method(self, element):
-        path = self.signature_path + '/ds:SignedInfo/ds:CanonicalizationMethod'
+        path = self.signature_path + "/ds:SignedInfo/ds:CanonicalizationMethod"
         canonicalization_method = element.find(path, namespaces=vars(NS))
-        algorithm = canonicalization_method.attrib.get('Algorithm')
+        algorithm = canonicalization_method.attrib.get("Algorithm")
         return algorithm
 
     def _parse_references(self, element):
-        path = self.signature_path + '/ds:SignedInfo/ds:Reference'
+        path = self.signature_path + "/ds:SignedInfo/ds:Reference"
         references = element.findall(path, namespaces=vars(NS))
 
         reference_dict_list = []
         for reference in references:
-            transforms = reference.find(QName(NS.ds, 'Transforms'))
+            transforms = reference.find(QName(NS.ds, "Transforms"))
             if transforms is None:
                 transforms = []
-            digest_method = reference.find(QName(NS.ds, 'DigestMethod'))
-            digest_value = reference.find(QName(NS.ds, 'DigestValue'))
+            digest_method = reference.find(QName(NS.ds, "DigestMethod"))
+            digest_value = reference.find(QName(NS.ds, "DigestValue"))
             reference_dict = {
-                "id": reference.attrib.get('Id'),
-                "uri": reference.attrib.get('URI'),
-                "transforms": [transform.attrib.get('Algorithm')
-                               for transform in transforms],
-                "digest_method": digest_method.attrib.get('Algorithm'),
-                "digest_value": digest_value.text
+                "id": reference.attrib.get("Id"),
+                "uri": reference.attrib.get("URI"),
+                "transforms": [
+                    transform.attrib.get("Algorithm") for transform in transforms
+                ],
+                "digest_method": digest_method.attrib.get("Algorithm"),
+                "digest_value": digest_value.text,
             }
             reference_dict_list.append(reference_dict)
 
@@ -102,7 +108,7 @@ class Verifier:
         resource = deepcopy(element)
 
         if sanitized_uri:
-            path = './/*[@Id="{}"]'.format(sanitized_uri)
+            path = f'.//*[@Id="{sanitized_uri}"]'
             resource = element.find(path, namespaces=vars(NS))
         else:
             self._remove_signature(resource)
@@ -115,26 +121,27 @@ class Verifier:
         return base64_digest
 
     def _extract_certificate(self, element):
-        path = './/ds:X509Certificate'
+        path = ".//ds:X509Certificate"
         certificate = element.find(path, namespaces=vars(NS))
         certificate_bytes = b"-----BEGIN CERTIFICATE-----\n"
-        certificate_bytes += certificate.text.encode('utf-8').strip()
+        certificate_bytes += certificate.text.encode("utf-8").strip()
         certificate_bytes += b"\n-----END CERTIFICATE-----"
         return certificate_bytes
 
     def _extract_signature_value(self, element):
-        path = './/ds:SignatureValue'
+        path = ".//ds:SignatureValue"
         signature_value = element.find(path, namespaces=vars(NS))
-        return signature_value.text.encode('utf-8')
+        return signature_value.text.encode("utf-8")
 
     def _extract_signature_method(self, element):
-        path = './/ds:SignatureMethod'
+        path = ".//ds:SignatureMethod"
         signature_method = element.find(path, namespaces=vars(NS))
-        return signature_method.attrib.get('Algorithm', "").encode('utf-8')
+        return signature_method.attrib.get("Algorithm", "").encode("utf-8")
 
     def _digest_signed_info(self, element, method):
         resource = element.find(
-            self.signature_path + "/ds:SignedInfo", namespaces=vars(NS))
+            self.signature_path + "/ds:SignedInfo", namespaces=vars(NS)
+        )
 
         canonical_resource = self.canonicalizer.canonicalize(resource)
         resource_hash = self.hasher.hash(canonical_resource, method)
@@ -143,10 +150,8 @@ class Verifier:
         return base64_digest
 
     def _compare_digests(self, computed_digest, given_digest):
-        decoded_computed_digest = self.encoder.base64_decode(
-            computed_digest)
-        decoded_given_digest = self.encoder.base64_decode(
-            given_digest)
+        decoded_computed_digest = self.encoder.base64_decode(computed_digest)
+        decoded_given_digest = self.encoder.base64_decode(given_digest)
 
         if decoded_computed_digest != decoded_given_digest:
             raise ValueError("Mismatched digest values")
@@ -157,42 +162,37 @@ class Verifier:
 
     def _verify_xades_cert(self, element):
         digest_path = ".//xades:Cert/xades:CertDigest/ds:DigestValue"
-        given_digest = element.find(
-            digest_path, namespaces=vars(NS)).text
+        given_digest = element.find(digest_path, namespaces=vars(NS)).text
         given_hash = self.encoder.base64_decode(given_digest)
 
         method_path = ".//xades:Cert/xades:CertDigest/ds:DigestMethod"
-        method = element.find(
-            method_path, namespaces=vars(NS)).attrib['Algorithm']
+        method = element.find(method_path, namespaces=vars(NS)).attrib["Algorithm"]
 
-        certificate = element.find(
-            './/ds:X509Certificate', namespaces=vars(NS)).text
+        certificate = element.find(".//ds:X509Certificate", namespaces=vars(NS)).text
         decoded_certificate = self.encoder.base64_decode(certificate)
         computed_hash = self.hasher.hash(decoded_certificate, method)
 
-        self._compare_hashes(
-            computed_hash, given_hash, 'XADES: Bad certificate digest')
+        self._compare_hashes(computed_hash, given_hash, "XADES: Bad certificate digest")
 
     def _verify_xades_policy(self, element):
         policy_uri = element.find(
-            './/xades:SigPolicyId/xades:Identifier',
-            namespaces=vars(NS)).text
-        policy_filename = policy_uri.split('/')[-1]
+            ".//xades:SigPolicyId/xades:Identifier", namespaces=vars(NS)
+        ).text
+        policy_filename = policy_uri.split("/")[-1]
         policy_binary = read_asset(policy_filename)
 
         method = element.find(
-            './/xades:SigPolicyHash/ds:DigestMethod',
-            namespaces=vars(NS)).attrib['Algorithm']
+            ".//xades:SigPolicyHash/ds:DigestMethod", namespaces=vars(NS)
+        ).attrib["Algorithm"]
 
         given_digest = element.find(
-            './/xades:SigPolicyHash/ds:DigestValue',
-            namespaces=vars(NS)).text.encode('utf-8')
+            ".//xades:SigPolicyHash/ds:DigestValue", namespaces=vars(NS)
+        ).text.encode("utf-8")
         given_hash = self.encoder.base64_decode(given_digest)
 
         computed_hash = self.hasher.hash(policy_binary, method)
 
-        self._compare_hashes(
-            computed_hash, given_hash, 'XADES: Bad policy digest')
+        self._compare_hashes(computed_hash, given_hash, "XADES: Bad policy digest")
 
     def _compare_hashes(self, computed_hash, given_hash, error_message):
         if computed_hash != given_hash:

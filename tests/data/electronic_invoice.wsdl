@@ -1,10 +1,10 @@
-<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
-    xmlns:sch="http://www.dian.gov.co/servicios/facturaelectronica/ReportarFactura" 
-    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:sch="http://www.dian.gov.co/servicios/facturaelectronica/ReportarFactura"
+    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
     xmlns:tns="http://www.dian.gov.co/servicios/facturaelectronica/ReportarFactura" targetNamespace="http://www.dian.gov.co/servicios/facturaelectronica/ReportarFactura">
     <wsdl:types xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
-        <schema xmlns="http://www.w3.org/2001/XMLSchema" 
-            xmlns:xmime="http://www.w3.org/2005/05/xmlmime" 
+        <schema xmlns="http://www.w3.org/2001/XMLSchema"
+            xmlns:xmime="http://www.w3.org/2005/05/xmlmime"
             xmlns:tns="http://www.dian.gov.co/servicios/facturaelectronica/ReportarFactura" elementFormDefault="qualified" targetNamespace="http://www.dian.gov.co/servicios/facturaelectronica/ReportarFactura">
             <element xmlns="http://www.w3.org/2001/XMLSchema" name="EnvioFacturaElectronicaPeticion" type="tns:EnvioFacturaElectronica"/>
             <element xmlns="http://www.w3.org/2001/XMLSchema" name="EnvioFacturaElectronicaRespuesta" type="tns:AcuseRecibo"/>
@@ -19,7 +19,7 @@ Envoltorio para recibir facturas electrónicas por medio de web service
                     <element xmlns="http://www.w3.org/2001/XMLSchema" name="NIT" type="tns:NitType"/>
                     <element xmlns="http://www.w3.org/2001/XMLSchema" name="InvoiceNumber" type="tns:InvoiceNumberType"/>
                     <element xmlns="http://www.w3.org/2001/XMLSchema" name="IssueDate" type="dateTime"/>
-                    <element xmlns="http://www.w3.org/2001/XMLSchema" 
+                    <element xmlns="http://www.w3.org/2001/XMLSchema"
                         xmlns:xmime="http://www.w3.org/2005/05/xmlmime" maxOccurs="1" minOccurs="1" name="Document" type="base64Binary" xmime:expectedContentTypes="*/*">
                         <annotation xmlns="http://www.w3.org/2001/XMLSchema">
                             <documentation xmlns="http://www.w3.org/2001/XMLSchema">

@@ -1,6 +1,7 @@
-from pytest import fixture
-from lxml.etree import fromstring
+# Thirdparty:
 from facturark.signer import Canonicalizer
+from lxml.etree import fromstring
+from pytest import fixture
 
 
 @fixture
@@ -11,7 +12,7 @@ def canonicalizer():
 
 @fixture
 def xml_document():
-    return fromstring('<Invoice/>')
+    return fromstring("<Invoice/>")
 
 
 def test_canonicalizer_instantiation():
@@ -20,4 +21,4 @@ def test_canonicalizer_instantiation():
 
 def test_canonicalize(canonicalizer, xml_document):
     result = canonicalizer.canonicalize(xml_document)
-    assert result == b'<Invoice></Invoice>'
+    assert result == b"<Invoice></Invoice>"

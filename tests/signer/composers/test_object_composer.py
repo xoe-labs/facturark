@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
-from pytest import fixture
-from lxml.etree import QName, fromstring
+# Thirdparty:
 from facturark.namespaces import NS
 from facturark.signer.composers import ObjectComposer
+from lxml.etree import QName, fromstring
+from pytest import fixture
 
 
 @fixture
@@ -13,12 +14,8 @@ def composer():
 @fixture
 def data_dict():
     return {
-        'qualifying_properties': {
-            'signed_properties': {
-                'signed_signature_properties': {
-
-                }
-            }
+        "qualifying_properties": {
+            "signed_properties": {"signed_signature_properties": {}}
         }
     }
 

@@ -3,8 +3,8 @@
 # 8.12. Tipos de Pago
 
 PAYMENT_TYPES = {
-    "10": u"Efectivo",
-    "20": u"Cheque",
-    "41": u"Transferencia bancaria",
-    "42": u"Consignación bancaria"
+    "10": "Efectivo",
+    "20": "Cheque",
+    "41": "Transferencia bancaria",
+    "42": "Consignación bancaria",
 }

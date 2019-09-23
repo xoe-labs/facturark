@@ -1,5 +1,6 @@
-from pytest import fixture
+# Thirdparty:
 from facturark.signer import Encoder
+from pytest import fixture
 
 
 @fixture
@@ -13,12 +14,12 @@ def test_encoder_instantiation(encoder):
 
 
 def test_encoder_base64_encode(encoder):
-    data = b'Binary'
+    data = b"Binary"
     result = encoder.base64_encode(data)
-    assert result == b'QmluYXJ5'
+    assert result == b"QmluYXJ5"
 
 
 def test_encoder_base64_decode(encoder):
-    data = b'QmluYXJ5'
+    data = b"QmluYXJ5"
     result = encoder.base64_decode(data)
-    assert result == b'Binary'
+    assert result == b"Binary"

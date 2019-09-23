@@ -1,8 +1,11 @@
-import os
+# Stdlib:
 import io
-from pytest import fixture
+import os
+
+# Thirdparty:
 from facturark.analyzer import Analyzer
 from facturark.client import Client
+from pytest import fixture
 
 
 @fixture
@@ -15,17 +18,17 @@ def analyzer():
 def client(analyzer):
     username = "USER"
     password = "PASS"
-    test_url = ("tests/data/electronic_invoice.wsdl")
+    test_url = "tests/data/electronic_invoice.wsdl"
 
     return Client(analyzer, username, password, test_url)
 
 
 @fixture
 def document():
-    filename = 'signed_invoice.xml'
+    filename = "signed_invoice.xml"
     directory = os.path.dirname(os.path.realpath(__file__))
-    file_path = os.path.join(directory, '..', 'data', filename)
-    with io.open(file_path, 'rb') as f:
+    file_path = os.path.join(directory, "..", "data", filename)
+    with io.open(file_path, "rb") as f:
         return f.read()
 
 

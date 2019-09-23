@@ -2,9 +2,15 @@
 
 """Top-level package for FacturArk."""
 
-from .api import (build_document, send_document, verify_document,
-                  query_document, generate_qrcode)
+# Localfolder:
+from .api import (
+    build_document,
+    generate_qrcode,
+    query_document,
+    send_document,
+    verify_document,
+)
 
 __author__ = """Nubark"""
-__email__ = 'info@nubark.com'
-__version__ = '0.3.0'
+__email__ = "info@nubark.com"
+__version__ = "0.3.0"

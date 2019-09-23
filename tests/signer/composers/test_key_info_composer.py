@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
-from pytest import fixture
-from lxml.etree import QName, fromstring
+# Thirdparty:
 from facturark.namespaces import NS
 from facturark.signer.composers import KeyInfoComposer
+from lxml.etree import QName, fromstring
+from pytest import fixture
 
 
 @fixture
@@ -13,10 +14,11 @@ def composer():
 @fixture
 def data_dict():
     return {
-        '@attributes': {'Id': ('xmldsig-efdc76b2-9896-'
-                               '4c6e-b1ad-6c56b59f8ed6-keyinfo')},
-        'X509_data': {
-            'X509_certificate': """
+        "@attributes": {
+            "Id": ("xmldsig-efdc76b2-9896-" "4c6e-b1ad-6c56b59f8ed6-keyinfo")
+        },
+        "X509_data": {
+            "X509_certificate": """
 MIIGOTCCBCGgAwIBAgIIHEYIuHDx5XwwDQYJKoZIhvcNAQELBQAwgbQxIzAhBgkqhkiG9w0BCQEW
 FGluZm9AYW5kZXNzY2QuY29tLmNvMSMwIQYDVQQDExpDQSBBTkRFUyBTQ0QgUy5BLiBDbGFzZSBJ
 STEwMC4GA1UECxMnRGl2aXNpb24gZGUgY2VydGlmaWNhY2lvbiBlbnRpZGFkIGZpbmFsMRMwEQYD
@@ -47,7 +49,7 @@ q9cqewsHs+JkSS93tE2IMLZNa6/QPH+DEqFfzs7OjRKWp2bUmHQSS06Lb96+jLdZ2PC3XZhPs4lb
 ISVn3ush80FSEc2z2NomKWlOGnykLJXcVhTxT1drgnrU6qaAq9+CnqLX+jQfWmfKkQCwSIuLtELb
 CA==
 """
-        }
+        },
     }
 
 
@@ -56,7 +58,9 @@ def test_compose(composer, data_dict, schema):
 
     assert key_info.prefix == "ds"
     assert key_info.tag == QName(NS.ds, "KeyInfo").text
-    assert key_info.find('ds:X509Data/ds:X509Certificate', vars(NS)).text == (
-        data_dict['X509_data']['X509_certificate']).strip()
-    assert key_info.attrib['Id'] == data_dict['@attributes']['Id']
+    assert (
+        key_info.find("ds:X509Data/ds:X509Certificate", vars(NS)).text
+        == (data_dict["X509_data"]["X509_certificate"]).strip()
+    )
+    assert key_info.attrib["Id"] == data_dict["@attributes"]["Id"]
     schema.assertValid(key_info)

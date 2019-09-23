@@ -1,14 +1,30 @@
+# Thirdparty:
 from facturark.composers import (
-    InvoiceLineComposer, PartyComposer, DespatchComposer, DeliveryComposer,
-    CustomerPartyComposer, SupplierPartyComposer, TaxTotalComposer,
-    InvoiceComposer, CreditNoteComposer, DebitNoteComposer)
+    CreditNoteComposer,
+    CustomerPartyComposer,
+    DebitNoteComposer,
+    DeliveryComposer,
+    DespatchComposer,
+    InvoiceComposer,
+    InvoiceLineComposer,
+    PartyComposer,
+    SupplierPartyComposer,
+    TaxTotalComposer,
+)
+from facturark.identifier import BlankIdentifier, InvoiceIdentifier
 from facturark.resolver import (
-    resolve_invoice_line_composer, resolve_party_composer,
-    resolve_despatch_composer, resolve_delivery_composer,
-    resolve_customer_party_composer, resolve_supplier_party_composer,
-    resolve_tax_total_composer, resolve_invoice_composer,
-    resolve_credit_note_composer, resolve_composer, resolve_identifier)
-from facturark.identifier import InvoiceIdentifier, BlankIdentifier
+    resolve_composer,
+    resolve_credit_note_composer,
+    resolve_customer_party_composer,
+    resolve_delivery_composer,
+    resolve_despatch_composer,
+    resolve_identifier,
+    resolve_invoice_composer,
+    resolve_invoice_line_composer,
+    resolve_party_composer,
+    resolve_supplier_party_composer,
+    resolve_tax_total_composer,
+)
 
 
 def test_resolve_invoice_line_composer():
@@ -48,16 +64,16 @@ def test_resolve_credit_note_composer():
 
 
 def test_resolve_composer():
-    composer = resolve_composer('invoice')
+    composer = resolve_composer("invoice")
     assert isinstance(composer, InvoiceComposer)
-    composer = resolve_composer('credit_note')
+    composer = resolve_composer("credit_note")
     assert isinstance(composer, CreditNoteComposer)
-    composer = resolve_composer('debit_note')
+    composer = resolve_composer("debit_note")
     assert isinstance(composer, DebitNoteComposer)
 
 
 def test_resolve_identifier():
-    identifier = resolve_identifier('invoice', 'ABC')
+    identifier = resolve_identifier("invoice", "ABC")
     assert isinstance(identifier, InvoiceIdentifier)
-    identifier = resolve_identifier('other')
+    identifier = resolve_identifier("other")
     assert isinstance(identifier, BlankIdentifier)

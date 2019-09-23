@@ -1,8 +1,9 @@
-from pytest import fixture
-from cryptography.hazmat.primitives.asymmetric import rsa
-from cryptography.hazmat.primitives import serialization
+# Thirdparty:
 from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives import serialization
+from cryptography.hazmat.primitives.asymmetric import rsa
 from facturark.signer import Encrypter
+from pytest import fixture
 
 
 @fixture
@@ -24,41 +25,42 @@ def test_encrypter_parse_public_key(encrypter, certificate_pem):
 
 
 def test_encrypter_verify_signature(encrypter, certificate_pem):
-    digest_b64 = b'Q4H+bP65Y5RVbzAt3jRE2QdShrimTa4wAmpuZ4YxP1Y='
+    digest_b64 = b"Q4H+bP65Y5RVbzAt3jRE2QdShrimTa4wAmpuZ4YxP1Y="
     signature_b64 = (
         b"fLhaP8kDwoDfMiSZy3xOPjpEQIXaEfFWs+NY/AWIf0kddsra1rhh4A/JeJGufd3hkM"
         b"2CEjx1p+rkA4QbPtJFzzzagf+td2QlHnpbviho7y2QOHRRy1Ioo/edp4r4+op2/fcPC"
         b"Ev3tgyyjV3AaXljccHclivXKrfEQnrE2N9iQ3BDkKAX2QGmxLSH9KuuHF8lzWWPwoL+"
         b"XsbTpSuoQQSjBb6A7KLGS8WNTSPbq8xiCvRGyzAEHonirgMK2vIXM9uJHvCoN1XZaxB"
         b"57++FsuyLBiwn5T4ngb8ephNQMvIdofNsK4IrZXd9YhirV3sZ5bgXtR4Kcn1ughzLrx"
-        b"j8Y5XqGw==")
+        b"j8Y5XqGw=="
+    )
     algorithm = "http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"
 
     result = encrypter.verify_signature(
-        certificate_pem, signature_b64, digest_b64, algorithm)
+        certificate_pem, signature_b64, digest_b64, algorithm
+    )
 
     assert result is True
 
 
 def test_encrypter_create_signature(encrypter, private_key):
-    digest_b64 = b'Q4H+bP65Y5RVbzAt3jRE2QdShrimTa4wAmpuZ4YxP1Y='
+    digest_b64 = b"Q4H+bP65Y5RVbzAt3jRE2QdShrimTa4wAmpuZ4YxP1Y="
     private_key_object = serialization.load_pem_private_key(
-        private_key,
-        password=None,
-        backend=default_backend())
+        private_key, password=None, backend=default_backend()
+    )
     result = encrypter.create_signature(private_key_object, digest_b64)
 
     assert result is not None
 
 
 def test_enrypter_encode_string(encrypter):
-    value = b'VALUE'
+    value = b"VALUE"
     result = encrypter._encode_string(value)
     assert result == value
 
-    value = u'VALUE'
+    value = "VALUE"
     result = encrypter._encode_string(value)
-    assert b'VALUE' == result
+    assert b"VALUE" == result
 
     value = {}
     result = encrypter._encode_string(value)

@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
+# Stdlib:
 import io
-from pytest import fixture, mark
-from lxml.etree import QName, fromstring, tostring
+
+# Thirdparty:
 from facturark.namespaces import NS
 from facturark.resolver import resolve_billing_reference_composer
+from lxml.etree import QName, fromstring, tostring
+from pytest import fixture, mark
 
 
 @fixture
@@ -17,28 +20,22 @@ def data_dict():
         "additional_document_reference": {
             "id": "JD-11-2018",
             "issue_date": "2018-11-30",
-            "document_type": u"Decisión de la JD"
+            "document_type": "Decisión de la JD",
         },
         "billing_reference_line": {
-            "amount": {
-                "@attributes": {
-                    "currencyID": "COP"
-                },
-                "#text": "15031725.00"
-            }
+            "amount": {"@attributes": {"currencyID": "COP"}, "#text": "15031725.00"}
         },
         "invoice_document_reference": {
             "id": "PRUE980000094",
             "uuid": "3d5a434b014429b551864c49a84164d58b11ea02",
-            "issue_date": "2018-11-30"
-        }
+            "issue_date": "2018-11-30",
+        },
     }
 
 
 @fixture
 def data_dict_empty():
-    return {
-    }
+    return {}
 
 
 def test_compose(composer, data_dict, schema):
@@ -47,32 +44,38 @@ def test_compose(composer, data_dict, schema):
     assert billing_reference.tag == QName(NS.cac, "BillingReference").text
 
     additional_document_reference = billing_reference.find(
-        QName(NS.cac, "AdditionalDocumentReference"))
-    assert additional_document_reference.find(
-        QName(NS.cbc, "ID")).text == "JD-11-2018"
-    assert additional_document_reference.find(
-        QName(NS.cbc, "IssueDate")).text == "2018-11-30"
-    assert additional_document_reference.find(
-        QName(NS.cbc, "DocumentType")).text == u"Decisión de la JD"
+        QName(NS.cac, "AdditionalDocumentReference")
+    )
+    assert additional_document_reference.find(QName(NS.cbc, "ID")).text == "JD-11-2018"
+    assert (
+        additional_document_reference.find(QName(NS.cbc, "IssueDate")).text
+        == "2018-11-30"
+    )
+    assert (
+        additional_document_reference.find(QName(NS.cbc, "DocumentType")).text
+        == "Decisión de la JD"
+    )
 
     billing_reference_line = billing_reference.find(
-        QName(NS.cac, "BillingReferenceLine"))
+        QName(NS.cac, "BillingReferenceLine")
+    )
     assert billing_reference_line.find(QName(NS.cbc, "ID")) is not None
-    assert billing_reference_line.find(
-        QName(NS.cbc, "Amount")).text == (
-            "15031725.00")
-    assert billing_reference_line.find(
-        QName(NS.cbc, "Amount")).attrib.get('currencyID') == 'COP'
+    assert billing_reference_line.find(QName(NS.cbc, "Amount")).text == ("15031725.00")
+    assert (
+        billing_reference_line.find(QName(NS.cbc, "Amount")).attrib.get("currencyID")
+        == "COP"
+    )
 
     invoice_document_reference = billing_reference.find(
-        QName(NS.cac, "InvoiceDocumentReference"))
-    assert invoice_document_reference.find(
-        QName(NS.cbc, "ID")).text == "PRUE980000094"
-    assert invoice_document_reference.find(
-        QName(NS.cbc, "UUID")).text == (
-            "3d5a434b014429b551864c49a84164d58b11ea02")
-    assert invoice_document_reference.find(
-        QName(NS.cbc, "IssueDate")).text == "2018-11-30"
+        QName(NS.cac, "InvoiceDocumentReference")
+    )
+    assert invoice_document_reference.find(QName(NS.cbc, "ID")).text == "PRUE980000094"
+    assert invoice_document_reference.find(QName(NS.cbc, "UUID")).text == (
+        "3d5a434b014429b551864c49a84164d58b11ea02"
+    )
+    assert (
+        invoice_document_reference.find(QName(NS.cbc, "IssueDate")).text == "2018-11-30"
+    )
 
     schema.assertValid(billing_reference)
 

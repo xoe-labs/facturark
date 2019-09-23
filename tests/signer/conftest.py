@@ -1,5 +1,8 @@
-import os
+# Stdlib:
 import io
+import os
+
+# Thirdparty:
 from pytest import fixture
 
 
@@ -53,19 +56,19 @@ ZXd9YhirV3sZ5bgXtR4Kcn1ughzLrxj8Y5XqGw==
 
 @fixture
 def certificate():
-    filename = 'cert.pem'
+    filename = "cert.pem"
     directory = os.path.dirname(os.path.realpath(__file__))
-    path = os.path.join(directory, '..', 'data', filename)
-    with io.open(path, 'rb') as f:
+    path = os.path.join(directory, "..", "data", filename)
+    with io.open(path, "rb") as f:
         certificate = f.read()
     return certificate
 
+
 @fixture
 def private_key():
-    filename = 'key.pem'
+    filename = "key.pem"
     directory = os.path.dirname(os.path.realpath(__file__))
-    path = os.path.join(directory, '..', 'data', filename)
-    with io.open(path, 'rb') as f:
+    path = os.path.join(directory, "..", "data", filename)
+    with io.open(path, "rb") as f:
         private_key = f.read()
     return private_key
-

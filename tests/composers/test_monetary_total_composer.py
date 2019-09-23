@@ -1,7 +1,8 @@
-from pytest import fixture
-from lxml.etree import QName, fromstring
-from facturark.namespaces import NS
+# Thirdparty:
 from facturark.composers import AmountComposer, MonetaryTotalComposer
+from facturark.namespaces import NS
+from lxml.etree import QName, fromstring
+from pytest import fixture
 
 
 @fixture
@@ -13,18 +14,15 @@ def composer():
 @fixture
 def data_dict():
     return {
-        'line_extension_amount': {
-            '@attributes': {'currencyID': 'COP'},
-            '#text': "888888.00"
+        "line_extension_amount": {
+            "@attributes": {"currencyID": "COP"},
+            "#text": "888888.00",
         },
-        'tax_exclusive_amount': {
-            '@attributes': {'currencyID': 'COP'},
-            '#text': "55555.00"
+        "tax_exclusive_amount": {
+            "@attributes": {"currencyID": "COP"},
+            "#text": "55555.00",
         },
-        'payable_amount': {
-            '@attributes': {'currencyID': 'COP'},
-            '#text': "4444.00"
-        }
+        "payable_amount": {"@attributes": {"currencyID": "COP"}, "#text": "4444.00"},
     }
 
 
@@ -33,19 +31,16 @@ def test_compose(composer, data_dict, schema):
 
     assert monetary_total.tag == QName(NS.fe, "LegalMonetaryTotal").text
 
-    line_extension_amount = monetary_total.find(
-        QName(NS.cbc, "LineExtensionAmount"))
+    line_extension_amount = monetary_total.find(QName(NS.cbc, "LineExtensionAmount"))
     assert line_extension_amount.text == "888888.00"
-    assert line_extension_amount.attrib['currencyID'] == 'COP'
+    assert line_extension_amount.attrib["currencyID"] == "COP"
 
-    tax_exclusive_amount = monetary_total.find(
-        QName(NS.cbc, "TaxExclusiveAmount"))
+    tax_exclusive_amount = monetary_total.find(QName(NS.cbc, "TaxExclusiveAmount"))
     assert tax_exclusive_amount.text == "55555.00"
-    assert tax_exclusive_amount.attrib['currencyID'] == 'COP'
+    assert tax_exclusive_amount.attrib["currencyID"] == "COP"
 
-    payable_amount = monetary_total.find(
-        QName(NS.cbc, "PayableAmount"))
+    payable_amount = monetary_total.find(QName(NS.cbc, "PayableAmount"))
     assert payable_amount.text == "4444.00"
-    assert payable_amount.attrib['currencyID'] == 'COP'
+    assert payable_amount.attrib["currencyID"] == "COP"
 
     schema.assertValid(monetary_total)

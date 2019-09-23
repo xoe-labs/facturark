@@ -1,17 +1,35 @@
 # -*- coding: utf-8 -*-
-from cryptography import x509
-from cryptography.hazmat.primitives import serialization
-from cryptography.hazmat.backends import default_backend
+# Stdlib:
 from datetime import datetime, timedelta, tzinfo
-from ..utils import read_asset
+
+# Thirdparty:
+from cryptography import x509
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives import serialization
 from lxml.etree import tostring
 
+# Localfolder:
+from ..utils import read_asset
+
+
 class Signer:
-    def __init__(self, canonicalizer, hasher, encoder, identifier, encrypter,
-                 signature_composer, key_info_composer, object_composer,
-                 qualifying_properties_composer, signed_properties_composer,
-                 signed_info_composer, signature_value_composer,
-                 certificate, private_key):
+    def __init__(
+        self,
+        canonicalizer,
+        hasher,
+        encoder,
+        identifier,
+        encrypter,
+        signature_composer,
+        key_info_composer,
+        object_composer,
+        qualifying_properties_composer,
+        signed_properties_composer,
+        signed_info_composer,
+        signature_value_composer,
+        certificate,
+        private_key,
+    ):
         self.canonicalizer = canonicalizer
         self.hasher = hasher
         self.encoder = encoder
@@ -24,10 +42,8 @@ class Signer:
         self.signed_properties_composer = signed_properties_composer
         self.signed_info_composer = signed_info_composer
         self.signature_value_composer = signature_value_composer
-        self.signature_algorithm = (
-            "http://www.w3.org/2001/04/xmldsig-more#rsa-sha256")
-        self.digest_algorithm = (
-            "http://www.w3.org/2001/04/xmlenc#sha256")
+        self.signature_algorithm = "http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"
+        self.digest_algorithm = "http://www.w3.org/2001/04/xmlenc#sha256"
         self.certificate = certificate
         self.private_key = private_key
 
@@ -42,45 +58,53 @@ class Signer:
         private_key_object = self._parse_private_key(self.private_key)
 
         # Prepare KeyInfo Element
-        key_info_id = self.identifier.generate_id(suffix='keyinfo')
-        key_info_element, key_info_digest = (
-            self._prepare_key_info(
-                certificate_object, key_info_id, self.digest_algorithm))
+        key_info_id = self.identifier.generate_id(suffix="keyinfo")
+        key_info_element, key_info_digest = self._prepare_key_info(
+            certificate_object, key_info_id, self.digest_algorithm
+        )
 
         # Prepare Signed Properties Element
-        signed_properties_id = signature_id + '-signedprops'
-        signed_properties_element, signed_properties_digest = (
-            self._prepare_signed_properties(
-                certificate_object, signed_properties_id))
+        signed_properties_id = signature_id + "-signedprops"
+        signed_properties_element, signed_properties_digest = self._prepare_signed_properties(
+            certificate_object, signed_properties_id
+        )
 
         # Prepare Document Element
-        document_element, document_digest = (
-            self._prepare_document(element, self.digest_algorithm))
+        document_element, document_digest = self._prepare_document(
+            element, self.digest_algorithm
+        )
 
         # Prepare Signed Info
         signed_info_element, signed_info_digest = self._prepare_signed_info(
-            (signature_id + '-ref0', '', document_digest),
+            (signature_id + "-ref0", "", document_digest),
             (None, key_info_id, key_info_digest),
-            (None, signed_properties_id, signed_properties_digest)
+            (None, signed_properties_id, signed_properties_digest),
         )
 
         # Create Encrypted Signature Digest
         signature_value_digest = self._create_signature_value_digest(
-            private_key_object, signed_info_digest)
+            private_key_object, signed_info_digest
+        )
 
         # Prepare Signature Value Element
-        uid = signature_id + '-sigvalue'
+        uid = signature_id + "-sigvalue"
         signature_value_element = self._prepare_signature_value(
-            signature_value_digest, uid)
+            signature_value_digest, uid
+        )
 
         # Create Signature
         signature_element = self._create_signature(
-            signature_id, signed_info_element, signature_value_element,
-            key_info_element, signed_properties_element)
+            signature_id,
+            signed_info_element,
+            signature_value_element,
+            key_info_element,
+            signed_properties_element,
+        )
 
         # Inject Signature Element In Document Element
         signed_document_element = self._inject_signature(
-            document_element, signature_element)
+            document_element, signature_element
+        )
 
         # return signed_document_element
         return document_element
@@ -89,65 +113,64 @@ class Signer:
         private_key_object = serialization.load_pem_private_key(
             private_key,
             password=None,  # Password encryption maybe later (why?)
-            backend=default_backend())
+            backend=default_backend(),
+        )
         return private_key_object
 
     def _parse_certificate(self, certificate):
-        certificate_object = x509.load_pem_x509_certificate(certificate, default_backend())
+        certificate_object = x509.load_pem_x509_certificate(
+            certificate, default_backend()
+        )
         return certificate_object
 
     def _serialize_certificate(self, certificate_object):
         pem_certificate = certificate_object.public_bytes(
-            encoding=serialization.Encoding.PEM)
+            encoding=serialization.Encoding.PEM
+        )
         return self._normalize_certificate(pem_certificate)
 
-    def _create_reference_dict(self, digest_value, attributes,
-                               transforms=None):
+    def _create_reference_dict(self, digest_value, attributes, transforms=None):
         reference_dict = {
             "@attributes": attributes,
-            "digest_method": {
-                "@attributes": {
-                    "Algorithm": self.digest_algorithm
-                }
-            },
-            "digest_value": digest_value
+            "digest_method": {"@attributes": {"Algorithm": self.digest_algorithm}},
+            "digest_value": digest_value,
         }
         if transforms:
-            reference_dict['transforms'] = transforms
+            reference_dict["transforms"] = transforms
         return reference_dict
 
     def _prepare_document(self, document_element, algorithm):
-        canonicalized_document = self.canonicalizer.canonicalize(
-            document_element)
-        document_digest = self.encoder.base64_encode(self.hasher.hash(
-            canonicalized_document, algorithm))
+        canonicalized_document = self.canonicalizer.canonicalize(document_element)
+        document_digest = self.encoder.base64_encode(
+            self.hasher.hash(canonicalized_document, algorithm)
+        )
         document_element = self.canonicalizer.parse(canonicalized_document)
 
         return document_element, document_digest
 
     def _prepare_key_info(self, certificate_object, uid, algorithm):
-        serialized_certificate = self._serialize_certificate(
-            certificate_object)
+        serialized_certificate = self._serialize_certificate(certificate_object)
         key_info_dict = {
-            '@attributes': {'Id': uid},
-            'X509_data': {
-                'X509_certificate': serialized_certificate
-            }
+            "@attributes": {"Id": uid},
+            "X509_data": {"X509_certificate": serialized_certificate},
         }
         key_info = self.key_info_composer.compose(key_info_dict)
         canonicalized_key_info = self.canonicalizer.canonicalize(key_info)
         key_info_digest = self.encoder.base64_encode(
-            self.hasher.hash(canonicalized_key_info, algorithm))
+            self.hasher.hash(canonicalized_key_info, algorithm)
+        )
         key_info = self.canonicalizer.parse(canonicalized_key_info)
 
         return key_info, key_info_digest
 
     def _normalize_certificate(self, certificate_pem):
         normalized_certificate = certificate_pem.replace(
-            b'-----BEGIN CERTIFICATE-----', b'')
+            b"-----BEGIN CERTIFICATE-----", b""
+        )
         normalized_certificate = normalized_certificate.replace(
-            b'-----END CERTIFICATE-----', b'')
-        return normalized_certificate.replace(b'\n', b'')
+            b"-----END CERTIFICATE-----", b""
+        )
+        return normalized_certificate.replace(b"\n", b"")
 
     def _get_certificate_digest_value(self, certificate_pem, algorithm):
         normalized_certificate = self._normalize_certificate(certificate_pem)
@@ -160,10 +183,15 @@ class Signer:
 
     def _get_policy(self):
         return (
-            ('https://facturaelectronica.dian.gov.co/'
-                'politicadefirma/v2/politicadefirmav2.pdf'),
-            (u"Política de firma para facturas electrónicas de la "
-             u"República de Colombia"))
+            (
+                "https://facturaelectronica.dian.gov.co/"
+                "politicadefirma/v2/politicadefirmav2.pdf"
+            ),
+            (
+                "Política de firma para facturas electrónicas de la "
+                "República de Colombia"
+            ),
+        )
 
     def _get_policy_hash(self, algorithm, policy_path=None):
         algorithm = algorithm
@@ -195,67 +223,61 @@ class Signer:
         issuer_name = self._prepare_issuer_name(certificate_object)
         serial_number = str(certificate_object.serial_number)
         certificate_pem = certificate_object.public_bytes(
-            encoding=serialization.Encoding.PEM)
-        digest_value = self._get_certificate_digest_value(certificate_pem,
-                                                          digest_algorithm)
+            encoding=serialization.Encoding.PEM
+        )
+        digest_value = self._get_certificate_digest_value(
+            certificate_pem, digest_algorithm
+        )
         policy_identifier, policy_description = self._get_policy()
         policy_hash = self._get_policy_hash(digest_algorithm)
 
-        certs = [{
-            'cert_digest': {
-                'digest_method': {
-                    '@attributes': {'Algorithm': digest_algorithm}
+        certs = [
+            {
+                "cert_digest": {
+                    "digest_method": {"@attributes": {"Algorithm": digest_algorithm}},
+                    "digest_value": digest_value,
                 },
-                'digest_value': digest_value
-            },
-            'issuer_serial': {
-                'X509_issuer_name': issuer_name,
-                'X509_serial_number': serial_number
+                "issuer_serial": {
+                    "X509_issuer_name": issuer_name,
+                    "X509_serial_number": serial_number,
+                },
             }
-        }]
+        ]
 
         signature_policy_id_dict = {
-            'sig_policy_id': {
-                'identifier': policy_identifier,
-                'description': policy_description
+            "sig_policy_id": {
+                "identifier": policy_identifier,
+                "description": policy_description,
             },
-            'sig_policy_hash': {
-                'digest_method': {
-                    '@attributes': {
-                        'Algorithm': digest_algorithm
-                    }
-                },
-                'digest_value': policy_hash
-            }
+            "sig_policy_hash": {
+                "digest_method": {"@attributes": {"Algorithm": digest_algorithm}},
+                "digest_value": policy_hash,
+            },
         }
-        claimed_role = 'supplier'
+        claimed_role = "supplier"
 
         signed_properties_dict = {
-            '@attributes': {'Id': uid},
-            'signed_signature_properties': {
-                'signing_time': signing_time,
-                'signing_certificate': {
-                    'certs': certs
+            "@attributes": {"Id": uid},
+            "signed_signature_properties": {
+                "signing_time": signing_time,
+                "signing_certificate": {"certs": certs},
+                "signature_policy_identifier": {
+                    "signature_policy_id": signature_policy_id_dict
                 },
-                'signature_policy_identifier': {
-                    'signature_policy_id': signature_policy_id_dict
-                },
-                'signer_role': {
-                    'claimed_roles': [{
-                        'claimed_role': claimed_role
-                    }]
-                }
-            }
+                "signer_role": {"claimed_roles": [{"claimed_role": claimed_role}]},
+            },
         }
 
         signed_properties = self.signed_properties_composer.compose(
-            signed_properties_dict)
+            signed_properties_dict
+        )
 
         canonicalized_signed_properties = self.canonicalizer.canonicalize(
-            signed_properties)
+            signed_properties
+        )
         signed_properties_digest = self.encoder.base64_encode(
-            self.hasher.hash(
-                canonicalized_signed_properties, digest_algorithm))
+            self.hasher.hash(canonicalized_signed_properties, digest_algorithm)
+        )
 
         return signed_properties, signed_properties_digest
 
@@ -275,132 +297,148 @@ class Signer:
 
         # cryptography < 2.5 (backport)
         from cryptography.x509.oid import NameOID
+
         #: Short attribute names from RFC 4514:
         #: https://tools.ietf.org/html/rfc4514#page-7
         _NAMEOID_TO_NAME = {
-            NameOID.COMMON_NAME: 'CN',
-            NameOID.LOCALITY_NAME: 'L',
-            NameOID.STATE_OR_PROVINCE_NAME: 'ST',
-            NameOID.ORGANIZATION_NAME: 'O',
-            NameOID.ORGANIZATIONAL_UNIT_NAME: 'OU',
-            NameOID.COUNTRY_NAME: 'C',
-            NameOID.STREET_ADDRESS: 'STREET',
-            NameOID.DOMAIN_COMPONENT: 'DC',
-            NameOID.USER_ID: 'UID',
+            NameOID.COMMON_NAME: "CN",
+            NameOID.LOCALITY_NAME: "L",
+            NameOID.STATE_OR_PROVINCE_NAME: "ST",
+            NameOID.ORGANIZATION_NAME: "O",
+            NameOID.ORGANIZATIONAL_UNIT_NAME: "OU",
+            NameOID.COUNTRY_NAME: "C",
+            NameOID.STREET_ADDRESS: "STREET",
+            NameOID.DOMAIN_COMPONENT: "DC",
+            NameOID.USER_ID: "UID",
         }
+
         def _escape_dn_value(val):
             """Escape special characters in RFC4514 Distinguished Name value."""
 
             # See https://tools.ietf.org/html/rfc4514#section-2.4
-            val = val.replace('\\', '\\\\')
+            val = val.replace("\\", "\\\\")
             val = val.replace('"', '\\"')
-            val = val.replace('+', '\\+')
-            val = val.replace(',', '\\,')
-            val = val.replace(';', '\\;')
-            val = val.replace('<', '\\<')
-            val = val.replace('>', '\\>')
-            val = val.replace('\0', '\\00')
+            val = val.replace("+", "\\+")
+            val = val.replace(",", "\\,")
+            val = val.replace(";", "\\;")
+            val = val.replace("<", "\\<")
+            val = val.replace(">", "\\>")
+            val = val.replace("\0", "\\00")
 
-            if val[0] in ('#', ' '):
-                val = '\\' + val
-            if val[-1] == ' ':
-                val = val[:-1] + '\\ '
+            if val[0] in ("#", " "):
+                val = "\\" + val
+            if val[-1] == " ":
+                val = val[:-1] + "\\ "
 
             return val
 
         def attribute_name_to_string(attribute_name):
             key = _NAMEOID_TO_NAME.get(
-                attribute_name.oid, attribute_name.oid.dotted_string)
-            return '%s=%s' % (key, _escape_dn_value(attribute_name.value))
+                attribute_name.oid, attribute_name.oid.dotted_string
+            )
+            return "{}={}".format(key, _escape_dn_value(attribute_name.value))
+
         def rdn_to_string(rdn):
-            return '+'.join(attribute_name_to_string(attr) for attr in rdn._attributes)
-        issuer_name = ','.join(
-            rdn_to_string(rdn) for rdn
-            in reversed(certificate_object.issuer._attributes)
-        ).encode('ascii')
+            return "+".join(attribute_name_to_string(attr) for attr in rdn._attributes)
+
+        issuer_name = ",".join(
+            rdn_to_string(rdn)
+            for rdn in reversed(certificate_object.issuer._attributes)
+        ).encode("ascii")
         # cryptography < 2.5 (end backport)
         return issuer_name
 
     def _prepare_signature_value(self, value, uid):
-        signature_value = self.signature_value_composer.compose({
-            "@attributes": {"Id": uid},
-            "#text": value})
+        signature_value = self.signature_value_composer.compose(
+            {"@attributes": {"Id": uid}, "#text": value}
+        )
 
         return signature_value
 
-    def _prepare_signed_info(self, document_tuple, key_info_tuple,
-                             signed_properties_tuple):
-        document_reference_id, document_reference_uri, document_digest = (
-            document_tuple)
-        _, key_info_reference_uri, key_info_digest = (
-            key_info_tuple)
+    def _prepare_signed_info(
+        self, document_tuple, key_info_tuple, signed_properties_tuple
+    ):
+        document_reference_id, document_reference_uri, document_digest = document_tuple
+        _, key_info_reference_uri, key_info_digest = key_info_tuple
         _, signed_properties_reference_uri, signed_properties_digest = (
-            signed_properties_tuple)
-        signed_properties_reference_type = (
-            "http://uri.etsi.org/01903#SignedProperties")
+            signed_properties_tuple
+        )
+        signed_properties_reference_type = "http://uri.etsi.org/01903#SignedProperties"
 
         signed_info_dict = {
             "canonicalization_method": {
                 "@attributes": {
-                    "Algorithm": ("http://www.w3.org/TR/"
-                                  "2001/REC-xml-c14n-20010315")
+                    "Algorithm": ("http://www.w3.org/TR/" "2001/REC-xml-c14n-20010315")
                 }
             },
             "signature_method": {
-                "@attributes": {
-                    "Algorithm": self.signature_algorithm
-                }
+                "@attributes": {"Algorithm": self.signature_algorithm}
             },
             "references": [
                 self._create_reference_dict(
                     document_digest,
-                    {'Id': document_reference_id,
-                     'URI': document_reference_uri},
-                    [{"@attributes": {"Algorithm": (
-                        "http://www.w3.org/2000/09/"
-                        "xmldsig#enveloped-signature")}}]),
-
+                    {"Id": document_reference_id, "URI": document_reference_uri},
+                    [
+                        {
+                            "@attributes": {
+                                "Algorithm": (
+                                    "http://www.w3.org/2000/09/"
+                                    "xmldsig#enveloped-signature"
+                                )
+                            }
+                        }
+                    ],
+                ),
                 self._create_reference_dict(
-                    key_info_digest,
-                    {'URI': "#" + key_info_reference_uri}),
+                    key_info_digest, {"URI": "#" + key_info_reference_uri}
+                ),
                 self._create_reference_dict(
                     signed_properties_digest,
-                    {'Type': signed_properties_reference_type,
-                     'URI': "#" + signed_properties_reference_uri})
-            ]
+                    {
+                        "Type": signed_properties_reference_type,
+                        "URI": "#" + signed_properties_reference_uri,
+                    },
+                ),
+            ],
         }
 
         signed_info = self.signed_info_composer.compose(signed_info_dict)
-        canonicalized_signed_info = self.canonicalizer.canonicalize(
-            signed_info)
-        signed_info_digest = self.encoder.base64_encode(self.hasher.hash(
-            canonicalized_signed_info))
+        canonicalized_signed_info = self.canonicalizer.canonicalize(signed_info)
+        signed_info_digest = self.encoder.base64_encode(
+            self.hasher.hash(canonicalized_signed_info)
+        )
 
         return signed_info, signed_info_digest
 
     def _create_signature_value_digest(self, private_key_object, signed_info_digest):
         encrypted_signature_value = self.encrypter.create_signature(
-            private_key_object, signed_info_digest, self.signature_algorithm)
+            private_key_object, signed_info_digest, self.signature_algorithm
+        )
 
-        signature_value_digest = self.encoder.base64_encode(
-            encrypted_signature_value)
+        signature_value_digest = self.encoder.base64_encode(encrypted_signature_value)
 
         return signature_value_digest
 
-    def _create_signature(self, signature_id, signed_info_element,
-                          signature_value_element, key_info_element,
-                          signed_properties_element):
+    def _create_signature(
+        self,
+        signature_id,
+        signed_info_element,
+        signature_value_element,
+        key_info_element,
+        signed_properties_element,
+    ):
 
-        signature = self.signature_composer.compose({
-            '@attributes': {'Id': signature_id}})
-        signature_id = signature.attrib.get('Id')
+        signature = self.signature_composer.compose(
+            {"@attributes": {"Id": signature_id}}
+        )
+        signature_id = signature.attrib.get("Id")
         signature.append(signed_info_element)
         signature.append(signature_value_element)
         signature.append(key_info_element)
 
-        qualifying_properties_element = (
-            self.qualifying_properties_composer.compose({
-                '@attributes': {'Target': '#' + signature_id}}))
+        qualifying_properties_element = self.qualifying_properties_composer.compose(
+            {"@attributes": {"Target": "#" + signature_id}}
+        )
         qualifying_properties_element.append(signed_properties_element)
         object_element = self.object_composer.compose({})
         object_element.append(qualifying_properties_element)
@@ -411,5 +449,6 @@ class Signer:
 
     def _inject_signature(self, document_element, signature_element):
         signed_document = self.signature_composer.inject_in_document(
-            document_element, signature_element)
+            document_element, signature_element
+        )
         return signed_document

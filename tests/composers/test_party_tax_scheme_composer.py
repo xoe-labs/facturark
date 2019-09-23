@@ -1,7 +1,8 @@
-from pytest import fixture
-from lxml.etree import QName, fromstring
-from facturark.namespaces import NS
+# Thirdparty:
 from facturark.composers import PartyTaxSchemeComposer
+from facturark.namespaces import NS
+from lxml.etree import QName, fromstring
+from pytest import fixture
 
 
 @fixture
@@ -11,9 +12,7 @@ def composer():
 
 @fixture
 def data_dict():
-    return {
-        'tax_level_code': '0'
-    }
+    return {"tax_level_code": "0"}
 
 
 def test_compose(composer, data_dict, schema):

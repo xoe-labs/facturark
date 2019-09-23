@@ -1,14 +1,15 @@
-import os
+# Stdlib:
 import base64
-import hashlib
 import datetime
+import hashlib
+import os
 
+# Thirdparty:
 from zeep import ns
 from zeep.wsse import utils
 
 
 class UsernameToken:
-
     def __init__(self, username, password):
         self.username = username
         self.password = password
@@ -25,18 +26,12 @@ class UsernameToken:
 
         # Create the sub elements of the UsernameToken element
         elements = [
-            utils.WSSE.Username(
-                self.username
-            ),
+            utils.WSSE.Username(self.username),
             utils.WSSE.Password(
-                hashlib.sha256(self.password.encode('utf-8')).hexdigest()
+                hashlib.sha256(self.password.encode("utf-8")).hexdigest()
             ),
-            utils.WSSE.Nonce(
-                base64.b64encode(nonce).decode('utf-8')
-            ),
-            utils.WSU.Created(
-                timestamp
-            )
+            utils.WSSE.Nonce(base64.b64encode(nonce).decode("utf-8")),
+            utils.WSU.Created(timestamp),
         ]
 
         token.extend(elements)

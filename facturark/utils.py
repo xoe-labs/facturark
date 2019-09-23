@@ -1,7 +1,10 @@
-import os
+# Stdlib:
 import io
+import os
 from datetime import date, datetime
-from lxml.etree import parse, XMLSchema, SubElement
+
+# Thirdparty:
+from lxml.etree import SubElement, XMLSchema, parse
 
 
 def parse_xsd(path):
@@ -10,15 +13,16 @@ def parse_xsd(path):
     return XMLSchema(xsd_doc)
 
 
-def make_child(parent, tag, text=None, attributes=None,
-               required=True, empty=False):
+def make_child(parent, tag, text=None, attributes=None, required=True, empty=False):
     child = None
     if empty and (text or attributes):
-        raise ValueError("The <{}> tag should be empty but text "
-                         "or attributes were given.".format(tag))
+        raise ValueError(
+            "The <{}> tag should be empty but text "
+            "or attributes were given.".format(tag)
+        )
 
     if (required and not empty) and not (text or attributes):
-        raise ValueError("The <{}> tag is required".format(tag))
+        raise ValueError(f"The <{tag}> tag is required")
 
     if empty:
         child = SubElement(parent, tag)
@@ -39,6 +43,7 @@ def json_serialize(object_):
 
 def read_asset(path):
     assets_directory = os.path.join(
-        os.path.dirname(os.path.realpath(__file__)), 'assets')
-    with io.open(os.path.join(assets_directory, path), 'rb') as f:
+        os.path.dirname(os.path.realpath(__file__)), "assets"
+    )
+    with io.open(os.path.join(assets_directory, path), "rb") as f:
         return f.read()
