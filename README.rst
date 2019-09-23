@@ -20,4 +20,4 @@ Librería de Generación de Factura Electrónica en Python
 System Dependencies (xmlsec)
 ----------------------------
 
-sudo apt install python-dev libxmlsec1-dev pkg-config
+sudo apt install python3.7-dev libxmlsec1-dev pkg-config
