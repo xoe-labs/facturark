@@ -5,8 +5,7 @@ from datetime import datetime
 
 # Thirdparty:
 from facturark.utils import json_serialize, make_child, parse_xsd, read_asset
-from lxml import etree
-from lxml.etree import XMLSchema, fromstring, parse, tostring
+from lxml.etree import XMLSchema, fromstring, parse
 from pytest import raises
 
 
@@ -54,13 +53,12 @@ def test_make_child_required_missing():
     tag = "Child"
 
     with raises(ValueError):
-        child = make_child(parent, tag)
+        make_child(parent, tag)
 
 
 def test_make_child_empty():
     parent = fromstring("<Root></Root>")
     tag = "Child"
-    text = "Fail!"
 
     child = make_child(parent, tag, empty=True)
     assert child is not None
@@ -72,7 +70,7 @@ def test_make_child_empty_with_values():
     text = "Fail!"
 
     with raises(ValueError):
-        child = make_child(parent, tag, text, empty=True)
+        make_child(parent, tag, text, empty=True)
 
 
 def test_json_serial():

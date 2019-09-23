@@ -1,9 +1,6 @@
 # Thirdparty:
 from lxml.etree import fromstring, tostring
 
-# Localfolder:
-from ..namespaces import NS
-
 
 class Canonicalizer:
     def canonicalize(self, element):

@@ -2,7 +2,7 @@
 # Thirdparty:
 from facturark.namespaces import NS
 from facturark.signer.composers.xades import SignerRoleComposer
-from lxml.etree import QName, fromstring, tostring
+from lxml.etree import QName
 from pytest import fixture
 
 

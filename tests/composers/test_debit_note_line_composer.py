@@ -123,8 +123,3 @@ def test_compose(composer, data_dict, schema):
         "El sistema de la DIAN indico que la firma digital " "esta fallida"
     )
     schema.assertValid(debit_note_line)
-
-
-def test_compose(composer, data_dict_without_some_data, schema):
-    debit_note_line = composer.compose(data_dict_without_some_data)
-    schema.assertValid(debit_note_line)

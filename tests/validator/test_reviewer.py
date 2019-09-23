@@ -1,5 +1,4 @@
 # Thirdparty:
-from facturark.validator import Reviewer
 from pytest import raises
 
 

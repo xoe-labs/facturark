@@ -1,12 +1,10 @@
 # Stdlib:
-import io
 
 # Thirdparty:
-from facturark.composers import InvoiceComposer
 from facturark.namespaces import NS
 from facturark.resolver import resolve_invoice_composer
-from lxml.etree import QName, fromstring, tostring
-from pytest import fixture, mark
+from lxml.etree import QName
+from pytest import fixture
 
 
 @fixture

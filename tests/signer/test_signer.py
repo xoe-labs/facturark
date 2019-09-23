@@ -17,11 +17,6 @@ from facturark.signer.composers import (
     KeyInfoComposer,
     ObjectComposer,
     SignatureValueComposer,
-    SignedInfoComposer,
-)
-from facturark.signer.composers.xades import (
-    QualifyingPropertiesComposer,
-    SignedPropertiesComposer,
 )
 from facturark.signer.resolver import (
     resolve_qualifying_properties_composer,
@@ -29,8 +24,7 @@ from facturark.signer.resolver import (
     resolve_signed_info_composer,
     resolve_signed_properties_composer,
 )
-from facturark.utils import read_asset
-from lxml.etree import QName, parse, tostring
+from lxml.etree import QName, parse
 from pytest import fixture
 
 
@@ -238,7 +232,7 @@ def test_signer_prepare_signature_value(signer):
 def test_create_signature_value_digest(signer, certificate, private_key):
     assert isinstance(certificate, bytes)
     assert isinstance(private_key, bytes)
-    certificate_object = signer._parse_certificate(certificate)
+    signer._parse_certificate(certificate)
     private_key = signer._parse_private_key(private_key)
     signed_info_digest = (
         b"d4OJpOqB2nxNMMYSFL8ZU0+3p1AGA1wHy7K21pktdRT5+FuVTJosq"

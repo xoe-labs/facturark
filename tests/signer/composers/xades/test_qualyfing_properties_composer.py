@@ -2,7 +2,7 @@
 # Thirdparty:
 from facturark.namespaces import NS
 from facturark.signer.resolver import resolve_qualifying_properties_composer
-from lxml.etree import QName, fromstring, tostring
+from lxml.etree import QName
 from pytest import fixture
 
 

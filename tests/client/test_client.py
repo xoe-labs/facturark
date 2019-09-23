@@ -1,7 +1,5 @@
 # Thirdparty:
-from facturark.client import Client
 from lxml.etree import fromstring
-from pytest import fixture
 
 
 def test_client_instantiation(client):

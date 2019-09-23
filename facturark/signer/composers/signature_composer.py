@@ -1,9 +1,8 @@
 # Thirdparty:
-from lxml.etree import Element, QName, SubElement, tostring
+from lxml.etree import Element, QName
 
 # Localfolder:
 from ...namespaces import NS
-from ...utils import make_child
 from .composer import Composer
 
 
@@ -32,4 +31,3 @@ class SignatureComposer(Composer):
         path = ".//ext:UBLExtensions/ext:UBLExtension[2]/ext:ExtensionContent"
         extension_content = document_element.find(path, vars(NS))
         extension_content.append(signature_element)
-        return document_element

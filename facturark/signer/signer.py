@@ -6,7 +6,6 @@ from datetime import datetime, timedelta, tzinfo
 from cryptography import x509
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import serialization
-from lxml.etree import tostring
 
 # Localfolder:
 from ..utils import read_asset
@@ -65,7 +64,7 @@ class Signer:
 
         # Prepare Signed Properties Element
         signed_properties_id = signature_id + "-signedprops"
-        signed_properties_element, signed_properties_digest = self._prepare_signed_properties(
+        signed_properties_element, signed_properties_digest = self._prepare_signed_properties(  # noqa
             certificate_object, signed_properties_id
         )
 
@@ -102,9 +101,7 @@ class Signer:
         )
 
         # Inject Signature Element In Document Element
-        signed_document_element = self._inject_signature(
-            document_element, signature_element
-        )
+        self._inject_signature(document_element, signature_element)
 
         # return signed_document_element
         return document_element
@@ -448,7 +445,4 @@ class Signer:
         return signature
 
     def _inject_signature(self, document_element, signature_element):
-        signed_document = self.signature_composer.inject_in_document(
-            document_element, signature_element
-        )
-        return signed_document
+        self.signature_composer.inject_in_document(document_element, signature_element)

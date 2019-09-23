@@ -1,6 +1,5 @@
 # Thirdparty:
 from facturark.namespaces import NS
-from lxml.etree import tostring
 from pytest import raises
 
 

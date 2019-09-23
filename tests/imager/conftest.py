@@ -5,7 +5,6 @@ import os
 # Thirdparty:
 from facturark.analyzer import Analyzer
 from facturark.imager import Imager
-from lxml.etree import fromstring
 from pytest import fixture
 
 

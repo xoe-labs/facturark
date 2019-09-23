@@ -3,7 +3,6 @@ from lxml.etree import Element, QName
 
 # Localfolder:
 from ..namespaces import NS
-from ..utils import make_child
 from .composer import Composer
 
 

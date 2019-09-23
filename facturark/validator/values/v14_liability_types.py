@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 # 8.14. Tipos de Obligaciones-Responsabilidades
 
 LIABILITY_TYPES = {
@@ -23,7 +21,8 @@ LIABILITY_TYPES = {
     "O-18": "Precios de Transferencia",
     "O-19": "Productor y/o exportador de bienes exentos",
     "O-20": "Obtención NIT",
-    "O-21": "Declarar el ingreso o salida del país de divisas o moneda legal colombiana",
+    "O-21": "Declarar el ingreso o salida del país de divisas o moneda legal "
+    "colombiana",
     "O-22": "Obligado a cumplir deberes formales a nombre de terceros",
     "O-23": "Agente de retención en el impuesto sobre las ventas",
     "O-24": "Declaración Informativa Consolidada Precios de transferencia",

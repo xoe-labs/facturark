@@ -1,12 +1,9 @@
 # -*- coding: utf-8 -*-
-# Stdlib:
-import io
-
 # Thirdparty:
 from facturark.namespaces import NS
 from facturark.resolver import resolve_billing_reference_composer
-from lxml.etree import QName, fromstring, tostring
-from pytest import fixture, mark
+from lxml.etree import QName
+from pytest import fixture
 
 
 @fixture

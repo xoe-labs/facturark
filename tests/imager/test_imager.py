@@ -7,7 +7,6 @@ def test_imager_instantiation(imager):
 
 
 def test_imager_qrcode(imager, document):
-    message = "INVOICE DATA"
     result = imager.qrcode(document)
     assert isinstance(result, bytes)
 

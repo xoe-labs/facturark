@@ -1,6 +1,6 @@
 # Thirdparty:
 from lxml.etree import DocumentInvalid, fromstring
-from pytest import fixture, raises
+from pytest import raises
 
 
 def test_validator_instantiation(validator):

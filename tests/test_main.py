@@ -105,7 +105,7 @@ def test_write_file(tmpdir):
     invoice_pathlocal = tmpdir.mkdir("sub").join("invoice.xml")
     data = b"<Invoice></Invoice>"
 
-    result = write_file(str(invoice_pathlocal), data)
+    write_file(str(invoice_pathlocal), data)
 
     assert invoice_pathlocal.read("rb") == data
 
@@ -183,7 +183,7 @@ def xtest_cli_build_credit_note(tmpdir, monkeypatch):
 
         return b"<Invoice><Id>777</Id><Invoice>", ""
 
-    monkeypatch.setattr(facturark.__main__, "build_document", mock_build_document)
+    monkeypatch.setattr(facturark.__main__, "build_document", mock_build_invoice)
 
     # Set Output File
     output_pathlocal = test_dir.join("invoice.xml")
@@ -195,7 +195,7 @@ def xtest_cli_build_credit_note(tmpdir, monkeypatch):
     }
 
     # Call The Cli
-    cli_build_invoice(options_dict)
+    cli_build_document(options_dict)
 
     assert isinstance(test_data["test_credit_note_dict"], dict)
     assert test_data["test_certificate"] is None

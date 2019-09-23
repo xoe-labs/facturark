@@ -1,9 +1,6 @@
 # Stdlib:
 from hashlib import sha1
 
-# Thirdparty:
-from lxml.etree import Element, QName, fromstring, tostring
-
 # Localfolder:
 from ..namespaces import NS
 

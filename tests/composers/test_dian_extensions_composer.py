@@ -1,11 +1,8 @@
 # -*- coding: utf-8 -*-
-# Stdlib:
-import io
-
 # Thirdparty:
 from facturark.composers import DianExtensionsComposer
 from facturark.namespaces import NS
-from lxml.etree import QName, fromstring
+from lxml.etree import QName
 from pytest import fixture
 
 

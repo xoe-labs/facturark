@@ -1,7 +1,7 @@
 # Thirdparty:
 from facturark.namespaces import NS
 from facturark.resolver import resolve_extensions_composer
-from lxml.etree import QName, fromstring
+from lxml.etree import QName
 from pytest import fixture
 
 

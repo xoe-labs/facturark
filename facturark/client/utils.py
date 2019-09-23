@@ -1,5 +1,4 @@
 # Stdlib:
-import base64
 import io
 import zipfile
 

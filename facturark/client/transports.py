@@ -1,5 +1,4 @@
 # Thirdparty:
-from lxml import etree
 from zeep import Transport
 from zeep.wsdl.utils import etree_to_string
 

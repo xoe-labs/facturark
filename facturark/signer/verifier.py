@@ -2,7 +2,7 @@
 from copy import deepcopy
 
 # Thirdparty:
-from lxml.etree import QName, fromstring, tostring
+from lxml.etree import QName, fromstring
 
 # Localfolder:
 from ..namespaces import NS

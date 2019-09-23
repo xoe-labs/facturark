@@ -3,7 +3,7 @@
 """Top-level package for FacturArk."""
 
 # Localfolder:
-from .api import (
+from .api import (  # noqa
     build_document,
     generate_qrcode,
     query_document,

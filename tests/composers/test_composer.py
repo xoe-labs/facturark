@@ -1,7 +1,6 @@
 # Thirdparty:
 from facturark.composers import Composer
-from facturark.namespaces import NS
-from lxml.etree import QName, fromstring
+from lxml.etree import fromstring
 from pytest import fixture, raises
 
 

@@ -1,5 +1,5 @@
 # Thirdparty:
-from lxml.etree import Element, QName, tostring
+from lxml.etree import Element, QName
 
 # Localfolder:
 from ..namespaces import NS

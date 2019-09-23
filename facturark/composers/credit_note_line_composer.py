@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Thirdparty:
-from lxml.etree import Element, QName, SubElement, tostring
+from lxml.etree import Element, QName
 
 # Localfolder:
 from ..namespaces import NS

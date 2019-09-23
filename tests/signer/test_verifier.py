@@ -41,7 +41,7 @@ def test_verifier_instantiation(verifier):
 def test_verifier_verify(verifier, signed_invoice):
     # This invoice should raise an error as it has been modified (formatted.)
     with raises(ValueError):
-        result = verifier.verify(signed_invoice)
+        verifier.verify(signed_invoice)
 
 
 def test_verifier_sha512(verifier, signed_invoice_sha512):

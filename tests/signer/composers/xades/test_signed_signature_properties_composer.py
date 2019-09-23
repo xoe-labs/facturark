@@ -7,7 +7,7 @@ from facturark.signer.composers.xades import (
     SignerRoleComposer,
     SigningCertificateComposer,
 )
-from lxml.etree import QName, fromstring, tostring
+from lxml.etree import QName
 from pytest import fixture
 
 

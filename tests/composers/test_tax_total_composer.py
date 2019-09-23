@@ -1,5 +1,4 @@
 # Thirdparty:
-from facturark.composers import TaxSubtotalComposer, TaxTotalComposer
 from facturark.namespaces import NS
 from facturark.resolver import resolve_tax_total_composer
 from lxml.etree import QName

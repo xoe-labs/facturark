@@ -1,11 +1,8 @@
 # Stdlib:
-from base64 import b64encode
 from datetime import datetime
-from random import randint
 
 # Thirdparty:
 import zeep
-from dateutil import parser
 from lxml.etree import fromstring, tostring
 
 # Localfolder:
@@ -15,7 +12,9 @@ from .utils import make_document_name, make_zip_file_bytes
 
 
 class Client:
-    def __init__(self, analyzer, username, password, wsdl_url, plugins=[]):
+    def __init__(self, analyzer, username, password, wsdl_url, plugins=None):
+        if not plugins:
+            plugins = []
         self.analyzer = analyzer
         self.client = zeep.Client(
             wsdl_url,

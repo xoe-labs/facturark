@@ -5,7 +5,6 @@ import hashlib
 import os
 
 # Thirdparty:
-from zeep import ns
 from zeep.wsse import utils
 
 

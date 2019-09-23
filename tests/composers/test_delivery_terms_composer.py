@@ -1,7 +1,7 @@
 # Thirdparty:
 from facturark.composers import DeliveryTermsComposer
 from facturark.namespaces import NS
-from lxml.etree import QName, fromstring
+from lxml.etree import QName
 from pytest import fixture
 
 

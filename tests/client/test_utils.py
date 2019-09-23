@@ -1,6 +1,4 @@
 # Stdlib:
-import io
-from zipfile import ZipFile
 
 # Thirdparty:
 from facturark.client.utils import make_document_name, make_zip_file_bytes

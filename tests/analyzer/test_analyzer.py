@@ -1,6 +1,6 @@
 # Thirdparty:
 from facturark.namespaces import NS
-from lxml.etree import Element, QName, fromstring
+from lxml.etree import Element, QName
 
 
 def test_analyzer_get_supplier_vat(analyzer, document):

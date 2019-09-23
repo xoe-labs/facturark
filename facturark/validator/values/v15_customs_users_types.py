@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 # 8.15. Tipos de Usuarios Aduaneros
 
 CUSTOMS_USERS_TYPES = {
@@ -7,10 +5,13 @@ CUSTOMS_USERS_TYPES = {
     "A-02": "Agente marítimo",
     "A-03": "Almacén general de depósito",
     "A-04": "Comercializadora internacional(C.I.)",
-    "A-05": "Comerciante de la zona aduanera especial de Inírida, Puerto Carre&ntildeo, Cumaribo y Primavera",
+    "A-05": "Comerciante de la zona aduanera especial de Inírida, Puerto "
+    "Carre&ntildeo, Cumaribo y Primavera",
     "A-06": "Comerciantes de la zona de régimen aduanero especial de Leticia",
-    "A-07": "Comerciantes de la zona de régimen aduanero especial de Maicao, Uribia y Manaure",
-    "A-08": "Comerciantes de la zona de régimen aduanero especial de Urabá, Tumaco y Guapí",
+    "A-07": "Comerciantes de la zona de régimen aduanero especial de Maicao, "
+    "Uribia y Manaure",
+    "A-08": "Comerciantes de la zona de régimen aduanero especial de Urabá, "
+    "Tumaco y Guapí",
     "A-09": "Comerciantes del puerto libre de San Andrés, Providencia y Santa Catalina",
     "A-10": "Depósito público de apoyo logístico internacional",
     "A-11": "Depósito privado para procesamiento industrial",

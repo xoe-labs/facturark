@@ -1,5 +1,4 @@
 # Thirdparty:
-from facturark.composers import InvoiceLineComposer, ItemComposer, PriceComposer
 from facturark.namespaces import NS
 from facturark.resolver import resolve_invoice_line_composer
 from lxml.etree import QName

@@ -1,9 +1,5 @@
 # Thirdparty:
-from lxml.etree import Element, QName, SubElement, tostring
-
-# Localfolder:
-from ..namespaces import NS
-from ..utils import make_child
+from lxml.etree import tostring
 
 
 class Composer:
